@@ -1,109 +1,102 @@
-import { Uploader } from "@irys/upload";
-import { Ethereum } from "@irys/upload-ethereum";
+import { WebIrys } from "@irys/sdk";
 
+// Simple interface for Irys configuration
 export interface IrysConfig {
   url: string;
   token: string;
   privateKey: string;
 }
 
+// Cost estimation result interface
+interface CostEstimate {
+  atomic: bigint;
+  formatted: string;
+  currency: string;
+}
+
+// Basic result interface for upload operations
 export interface UploadResult {
   id: string;
   url: string;
   timestamp: number;
   size: number;
+  data?: any;
 }
 
-export interface CostEstimate {
-  atomic: string;
-  formatted: string;
-  currency: string;
-}
-
+// Simplified Irys service that can be expanded later
 export class IrysService {
-  private uploader: any;
+  private irys: WebIrys | null = null;
   private config: IrysConfig;
 
   constructor(config: IrysConfig) {
     this.config = config;
   }
 
-  async initialize() {
+  // Initialize the Irys client
+  async initialize(): Promise<void> {
     try {
-      this.uploader = await Uploader(Ethereum, {
+      this.irys = new WebIrys({
         url: this.config.url,
         token: this.config.token,
-        key: this.config.privateKey,
+        wallet: {
+          name: 'ethers',
+          provider: {
+            url: 'https://rpc.ankr.com/eth_goerli'
+          }
+        }
       });
-      console.log("Irys uploader initialized successfully");
+      
+      await this.irys.ready();
+      console.log("Irys initialized successfully");
     } catch (error) {
-      console.error("Failed to initialize Irys uploader:", error);
+      console.error("Failed to initialize Irys:", error);
       throw error;
     }
   }
 
-  async estimateCost(data: string | File | Buffer): Promise<CostEstimate> {
-    if (!this.uploader) {
-      throw new Error("Irys uploader not initialized. Call initialize() first.");
+  async estimateCost(sizeInBytes: number): Promise<CostEstimate> {
+    if (!this.irys) {
+      throw new Error("Irys not initialized. Call initialize() first.");
     }
-
-    try {
-      const size = typeof data === 'string' ? new TextEncoder().encode(data).length : 
-                  data instanceof File ? data.size : data.length;
-      
-      const price = await this.uploader.getPrice(size);
-      
-      return {
-        atomic: price.toString(),
-        formatted: this.uploader.utils.fromAtomic(price),
-        currency: this.uploader.token,
-      };
-    } catch (error) {
-      console.error("Error estimating upload cost:", error);
-      throw error;
-    }
+    
+    const price = await this.irys.getPrice(sizeInBytes);
+    return {
+      atomic: BigInt(price.toString()),
+      formatted: this.irys.utils.fromAtomic(price).toString(),
+      currency: this.irys.token
+    };
   }
 
   async fund(amount: string): Promise<any> {
-    if (!this.uploader) {
-      throw new Error("Irys uploader not initialized. Call initialize() first.");
+    if (!this.irys) {
+      throw new Error("Irys not initialized. Call initialize() first.");
     }
-
-    try {
-      const fundTx = await this.uploader.fund(
-        this.uploader.utils.toAtomic(amount)
-      );
-      
-      console.log(`Successfully funded ${amount} ${this.uploader.token} on Irys`);
-      return fundTx;
-    } catch (error) {
-      console.error("Error funding Irys node:", error);
-      throw error;
-    }
+    
+    const fundTx = await this.irys.fund(amount);
+    return fundTx;
   }
 
-  async getBalance(): Promise<string> {
-    if (!this.uploader) {
-      throw new Error("Irys uploader not initialized. Call initialize() first.");
+  async getBalance(address: string = this.irys?.address || ''): Promise<string> {
+    if (!this.irys) {
+      throw new Error("Irys not initialized. Call initialize() first.");
     }
-
-    try {
-      const atomicBalance = await this.uploader.getLoadedBalance();
-      return this.uploader.utils.fromAtomic(atomicBalance);
-    } catch (error) {
-      console.error("Error getting balance:", error);
-      throw error;
+    
+    if (!address) {
+      address = this.irys.address;
     }
+    
+    const balance = await this.irys.getBalance(address);
+    return balance.toString();
   }
 
   async uploadData(
-    data: string | File | Buffer,
+    data: string | Buffer,
     tags: { name: string; value: string }[] = []
   ): Promise<UploadResult> {
-    if (!this.uploader) {
-      throw new Error("Irys uploader not initialized. Call initialize() first.");
+    if (!this.irys) {
+      throw new Error("Irys not initialized. Call initialize() first.");
     }
-
+    
     try {
       const defaultTags = [
         { name: "Content-Type", value: "application/json" },
@@ -113,16 +106,22 @@ export class IrysService {
         ...tags,
       ];
 
-      const receipt = await this.uploader.upload(data, { tags: defaultTags });
+      const receipt = await this.irys.upload(data, { tags: defaultTags });
+      
+      // Get the data size from the receipt or calculate it if not available
+      const dataSize = Buffer.byteLength(
+        typeof data === 'string' ? data : data.toString()
+      );
       
       return {
         id: receipt.id,
         url: `https://gateway.irys.xyz/${receipt.id}`,
         timestamp: Date.now(),
-        size: receipt.size,
+        size: dataSize,
+        data: receipt
       };
     } catch (error) {
-      console.error("Error uploading to Irys:", error);
+      console.error("Error uploading data:", error);
       throw error;
     }
   }

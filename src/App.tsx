@@ -1,23 +1,15 @@
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import { ToastProvider, useToast } from './components/ui/toast-simple'
+import { ToastProvider } from './components/ui/toast-simple'
 import { Dashboard } from './pages/Dashboard'
 import { FocusTimer } from './pages/FocusTimer'
 import { Crystals } from './pages/Crystals'
 import { Profile } from './pages/Profile'
 import { Button } from './components/ui/button'
 import useTimerStore from './stores/useTimerStore'
-import useUserStore from './stores/useUserStore'
-import useSessionStore from './stores/useSessionStore'
 import { useEffect } from 'react'
 
 function App() {
-  // Initialize stores and toast
   const initializeTimer = useTimerStore((state) => state.resetTimer)
-  const { toast } = useToast()
-  
-  // These are kept for future use
-  const setWalletAddress = useUserStore((state) => state.setWalletAddress)
-  const sessions = useSessionStore((state) => state.sessions)
 
   // Initialize app state
   useEffect(() => {
