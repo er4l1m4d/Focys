@@ -1,17 +1,20 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+type SessionType = 'focus' | 'shortBreak' | 'longBreak'
+
 interface TimerState {
   // Timer state
   isRunning: boolean
   timeLeft: number
-  sessionType: 'focus' | 'shortBreak' | 'longBreak'
-  sessionCount: number
+  currentRound: number
+  totalRounds: number
+  sessionType: SessionType
   
   // Timer settings
-  focusDuration: number // in minutes
-  shortBreakDuration: number // in minutes
-  longBreakDuration: number // in minutes
+  focusDuration: number // in seconds
+  shortBreakDuration: number // in seconds
+  longBreakDuration: number // in seconds
   sessionsBeforeLongBreak: number
   
   // Actions
@@ -20,10 +23,21 @@ interface TimerState {
   resetTimer: () => void
   toggleTimer: () => void
   nextSession: () => void
+  tick: () => void
+  completeSession: () => void
+  formatTime: (seconds?: number) => string
   setFocusDuration: (minutes: number) => void
   setShortBreakDuration: (minutes: number) => void
   setLongBreakDuration: (minutes: number) => void
   setSessionsBeforeLongBreak: (count: number) => void
+  
+  // Computed values
+  currentSessionDuration: () => number
+  getProgressPercentage: () => number
+  getSessionType: () => SessionType
+  getRemainingTime: () => number
+  getTotalRounds: () => number
+  getCurrentRound: () => number
 }
 
 const useTimerStore = create<TimerState>()(
@@ -32,11 +46,12 @@ const useTimerStore = create<TimerState>()(
       // Initial state
       isRunning: false,
       timeLeft: 25 * 60, // 25 minutes in seconds
+      currentRound: 1,
+      totalRounds: 8, // 4 focus + 4 short breaks
       sessionType: 'focus',
-      sessionCount: 0,
-      focusDuration: 25,
-      shortBreakDuration: 5,
-      longBreakDuration: 15,
+      focusDuration: 25 * 60, // 25 minutes in seconds
+      shortBreakDuration: 5 * 60, // 5 minutes in seconds
+      longBreakDuration: 15 * 60, // 15 minutes in seconds
       sessionsBeforeLongBreak: 4,
 
       // Actions
@@ -44,44 +59,130 @@ const useTimerStore = create<TimerState>()(
       pauseTimer: () => set({ isRunning: false }),
       toggleTimer: () => set((state) => ({ isRunning: !state.isRunning })),
       
+      tick: () => {
+        const { timeLeft } = get()
+        if (timeLeft > 0) {
+          set({ timeLeft: timeLeft - 1 })
+        }
+      },
+      
+      completeSession: () => {
+        const { currentRound, totalRounds, sessionType } = get()
+        const isLastRound = currentRound >= totalRounds
+        const isFocusSession = sessionType === 'focus'
+        
+        if (isLastRound && isFocusSession) {
+          // End of all sessions
+          set({
+            isRunning: false,
+            currentRound: 1,
+            sessionType: 'focus',
+            timeLeft: get().focusDuration
+          })
+        } else if (isFocusSession) {
+          // Move to short break
+          set({
+            isRunning: false,
+            currentRound: currentRound + 1,
+            sessionType: 'shortBreak',
+            timeLeft: get().shortBreakDuration
+          })
+        } else {
+          // Move to next focus session
+          set({
+            isRunning: false,
+            sessionType: 'focus',
+            timeLeft: get().focusDuration
+          })
+        }
+      },
+      
+      formatTime: (seconds?: number) => {
+        const time = seconds !== undefined ? seconds : get().timeLeft
+        const mins = Math.floor(time / 60)
+        const secs = time % 60
+        return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`
+      },
+      
       resetTimer: () => {
-        const { sessionType, focusDuration, shortBreakDuration, longBreakDuration } = get()
-        const duration = 
-          sessionType === 'focus' ? focusDuration :
-          sessionType === 'shortBreak' ? shortBreakDuration :
-          longBreakDuration
-        set({ timeLeft: duration * 60 })
+        const { sessionType } = get()
+        set({
+          timeLeft: sessionType === 'focus' ? 
+            get().focusDuration : 
+            sessionType === 'shortBreak' ? 
+              get().shortBreakDuration : 
+              get().longBreakDuration,
+          isRunning: false
+        })
       },
       
       nextSession: () => {
-        const { sessionCount, sessionsBeforeLongBreak } = get()
-        const nextSessionCount = (sessionCount + 1) % (sessionsBeforeLongBreak + 1)
-        const isLongBreak = nextSessionCount === 0 && sessionCount > 0
+        const { currentRound, totalRounds, sessionType } = get()
+        const isFocusSession = sessionType === 'focus'
+        const isLastRound = currentRound >= totalRounds
         
-        set(state => ({
-          sessionCount: nextSessionCount,
-          sessionType: isLongBreak ? 'longBreak' : 
-                       state.sessionType === 'focus' ? 'shortBreak' : 'focus',
-          timeLeft: isLongBreak ? state.longBreakDuration * 60 :
-                    state.sessionType === 'focus' ? state.shortBreakDuration * 60 :
-                    state.focusDuration * 60,
-          isRunning: false
-        }))
+        if (isLastRound && isFocusSession) {
+          // End of all sessions
+          set({
+            currentRound: 1,
+            sessionType: 'focus',
+            timeLeft: get().focusDuration,
+            isRunning: false
+          })
+        } else if (isFocusSession) {
+          // Move to short break
+          set({
+            currentRound: currentRound + 1,
+            sessionType: 'shortBreak',
+            timeLeft: get().shortBreakDuration,
+            isRunning: false
+          })
+        } else {
+          // Move to next focus session
+          set({
+            sessionType: 'focus',
+            timeLeft: get().focusDuration,
+            isRunning: false
+          })
+        }
       },
+      
+      // Computed values
+      currentSessionDuration: () => {
+        const { sessionType, focusDuration, shortBreakDuration, longBreakDuration } = get()
+        return sessionType === 'focus' ? 
+          focusDuration : 
+          sessionType === 'shortBreak' ? 
+            shortBreakDuration : 
+            longBreakDuration
+      },
+      
+      getProgressPercentage: () => {
+        const { timeLeft, currentSessionDuration } = get()
+        return ((currentSessionDuration() - timeLeft) / currentSessionDuration()) * 100
+      },
+      
+      getSessionType: () => get().sessionType,
+      
+      getRemainingTime: () => get().timeLeft,
+      
+      getTotalRounds: () => get().totalRounds,
+      
+      getCurrentRound: () => get().currentRound,
       
       // Settings actions
       setFocusDuration: (minutes) => set({ 
-        focusDuration: minutes,
+        focusDuration: minutes * 60,
         timeLeft: get().sessionType === 'focus' ? minutes * 60 : get().timeLeft
       }),
       
       setShortBreakDuration: (minutes) => set({ 
-        shortBreakDuration: minutes,
+        shortBreakDuration: minutes * 60,
         timeLeft: get().sessionType === 'shortBreak' ? minutes * 60 : get().timeLeft
       }),
       
       setLongBreakDuration: (minutes) => set({ 
-        longBreakDuration: minutes,
+        longBreakDuration: minutes * 60,
         timeLeft: get().sessionType === 'longBreak' ? minutes * 60 : get().timeLeft
       }),
       

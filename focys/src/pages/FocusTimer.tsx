@@ -1,5 +1,3 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { PomodoroTimer } from '@/components/timer/PomodoroTimer'
 
 export function FocusTimer() {
@@ -9,9 +7,6 @@ export function FocusTimer() {
         <h1 className="text-3xl font-bold text-center mb-8">Focus Session</h1>
         <PomodoroTimer />
       </div>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   )
 }
