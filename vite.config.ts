@@ -1,20 +1,11 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react-swc'
-import path from 'path'
-import { execSync } from 'child_process'
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+import path from 'path';
 
 // https://vite.dev/config/
-// Execute npm install in the project root
-try {
-  execSync('npm install', { stdio: 'inherit' });
-} catch (error) {
-  console.error('Failed to install dependencies:', error);
-  process.exit(1);
-}
-
 export default defineConfig({
   plugins: [react()],
-  base: process.env.NODE_ENV === 'production' ? '/' : '/',
+  base: '/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -23,18 +14,29 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
+    sourcemap: true,
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html')
-      }
-    }
+      },
+      output: {
+        manualChunks: {
+          react: ['react', 'react-dom', 'react-router-dom'],
+          vendor: ['@irys/sdk', 'zustand', '@tanstack/react-query'],
+        },
+      },
+    },
   },
   server: {
     port: 5173,
-    strictPort: true
+    strictPort: true,
+    open: true,
   },
   preview: {
     port: 5173,
-    strictPort: true
-  }
-})
+    strictPort: true,
+  },
+  optimizeDeps: {
+    include: ['@irys/sdk', 'react', 'react-dom', 'react-router-dom'],
+  },
+});
