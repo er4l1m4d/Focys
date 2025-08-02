@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import sessionPersistence from '../utils/sessionPersistence'
+import useGamificationStore from './useGamificationStore'
 
 export interface SessionLog {
   id: string
@@ -106,6 +107,20 @@ const useTimerStore = create<TimerState>()(
           duration: sessionDuration,
           completed: true
         })
+        
+        // Award XP and update gamification stats for focus sessions
+        if (isFocusSession) {
+          const gamificationStore = useGamificationStore.getState()
+          const focusMinutes = Math.floor(sessionDuration / 60)
+          
+          // Check if this is a new day for streak calculation
+          const lastSessionDate = new Date(gamificationStore.totalSessions > 0 ? now - (24 * 60 * 60 * 1000) : 0)
+          const today = new Date(now)
+          const isNewDay = lastSessionDate.toDateString() !== today.toDateString()
+          
+          // Update gamification stats
+          gamificationStore.updateSessionStats(focusMinutes, isNewDay)
+        }
         
         if (isLastRound && isFocusSession) {
           // End of all sessions
