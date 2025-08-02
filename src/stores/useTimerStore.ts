@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import sessionPersistence from '../utils/sessionPersistence'
 
 export interface SessionLog {
   id: string
@@ -45,6 +46,14 @@ interface TimerState {
   logSession: (session: Omit<SessionLog, 'id'>) => void
   getRecentSessions: (limit?: number) => SessionLog[]
   clearSessionLogs: () => void
+  
+  // Session persistence
+  loadSessionsFromStorage: () => Promise<void>
+  saveSessionsToStorage: () => Promise<void>
+  exportSessionsAsJson: () => Promise<string>
+  exportSessionsAsFile: (filename?: string) => void
+  importSessionsFromJson: (jsonData: string) => Promise<void>
+  getSessionStats: () => Promise<any>
   
   // Computed values
   currentSessionDuration: () => number
@@ -239,6 +248,60 @@ const useTimerStore = create<TimerState>()(
       clearSessionLogs: () => {
         set({ sessionLogs: [] })
       },
+      
+      // Session persistence methods
+      loadSessionsFromStorage: async () => {
+        try {
+          const sessions = await sessionPersistence.loadSessions()
+          set({ sessionLogs: sessions })
+          console.log(`Loaded ${sessions.length} sessions from storage`)
+        } catch (error) {
+          console.error('Failed to load sessions from storage:', error)
+        }
+      },
+      
+      saveSessionsToStorage: async () => {
+        try {
+          const { sessionLogs } = get()
+          await sessionPersistence.saveSessions(sessionLogs)
+          console.log(`Saved ${sessionLogs.length} sessions to storage`)
+        } catch (error) {
+          console.error('Failed to save sessions to storage:', error)
+        }
+      },
+      
+      exportSessionsAsJson: async () => {
+        try {
+          return await sessionPersistence.exportSessions()
+        } catch (error) {
+          console.error('Failed to export sessions:', error)
+          throw error
+        }
+      },
+      
+      exportSessionsAsFile: (filename?: string) => {
+        sessionPersistence.downloadSessionsAsFile(filename)
+      },
+      
+      importSessionsFromJson: async (jsonData: string) => {
+        try {
+          const sessions = await sessionPersistence.importSessions(jsonData)
+          set({ sessionLogs: sessions })
+          console.log(`Imported ${sessions.length} sessions`)
+        } catch (error) {
+          console.error('Failed to import sessions:', error)
+          throw error
+        }
+      },
+      
+      getSessionStats: async () => {
+        try {
+          return await sessionPersistence.getSessionStats()
+        } catch (error) {
+          console.error('Failed to get session stats:', error)
+          return null
+        }
+      },
     }),
     {
       name: 'focys-timer-storage',
@@ -247,6 +310,7 @@ const useTimerStore = create<TimerState>()(
         shortBreakDuration: state.shortBreakDuration,
         longBreakDuration: state.longBreakDuration,
         sessionsBeforeLongBreak: state.sessionsBeforeLongBreak,
+        sessionLogs: state.sessionLogs, // Now persist session logs too
       })
     }
   )

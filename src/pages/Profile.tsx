@@ -1,9 +1,11 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import SessionManager from "@/components/session/SessionManager"
 
 export function Profile() {
   return (
-    <div className="container mx-auto p-4">
+    <div className="container mx-auto p-4 space-y-6">
+      {/* User Profile Section */}
       <Card>
         <CardHeader>
           <CardTitle>Your Profile</CardTitle>
@@ -37,12 +39,12 @@ export function Profile() {
                 </div>
               </div>
             </div>
-            <Button variant="outline" className="w-full mt-4">
-              Connect Wallet
-            </Button>
           </div>
         </CardContent>
       </Card>
+      
+      {/* Session Management Section */}
+      <SessionManager />
     </div>
   )
 }
