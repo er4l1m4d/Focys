@@ -1,6 +1,15 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 
+export interface SessionLog {
+  id: string
+  type: 'focus' | 'shortBreak' | 'longBreak'
+  startTime: number
+  endTime: number
+  duration: number // in seconds
+  completed: boolean
+}
+
 type SessionType = 'focus' | 'shortBreak' | 'longBreak'
 
 interface TimerState {
@@ -16,6 +25,7 @@ interface TimerState {
   shortBreakDuration: number // in seconds
   longBreakDuration: number // in seconds
   sessionsBeforeLongBreak: number
+  sessionLogs: SessionLog[]
   
   // Actions
   startTimer: () => void
@@ -30,6 +40,11 @@ interface TimerState {
   setShortBreakDuration: (minutes: number) => void
   setLongBreakDuration: (minutes: number) => void
   setSessionsBeforeLongBreak: (count: number) => void
+  
+  // Session logging
+  logSession: (session: Omit<SessionLog, 'id'>) => void
+  getRecentSessions: (limit?: number) => SessionLog[]
+  clearSessionLogs: () => void
   
   // Computed values
   currentSessionDuration: () => number
@@ -48,6 +63,7 @@ const useTimerStore = create<TimerState>()(
       timeLeft: 25 * 60, // 25 minutes in seconds
       currentRound: 1,
       totalRounds: 8, // 4 focus + 4 short breaks
+      sessionLogs: [],
       sessionType: 'focus',
       focusDuration: 25 * 60, // 25 minutes in seconds
       shortBreakDuration: 5 * 60, // 5 minutes in seconds
@@ -67,9 +83,20 @@ const useTimerStore = create<TimerState>()(
       },
       
       completeSession: () => {
-        const { currentRound, totalRounds, sessionType } = get()
+        const { currentRound, totalRounds, sessionType, logSession } = get()
         const isLastRound = currentRound >= totalRounds
         const isFocusSession = sessionType === 'focus'
+        const now = Date.now()
+        const sessionDuration = get().currentSessionDuration()
+        
+        // Log the completed session
+        logSession({
+          type: sessionType,
+          startTime: now - (sessionDuration * 1000),
+          endTime: now,
+          duration: sessionDuration,
+          completed: true
+        })
         
         if (isLastRound && isFocusSession) {
           // End of all sessions
@@ -80,17 +107,21 @@ const useTimerStore = create<TimerState>()(
             timeLeft: get().focusDuration
           })
         } else if (isFocusSession) {
-          // Move to short break
+          // Move to short break or long break
+          const nextBreakType = (currentRound % get().sessionsBeforeLongBreak === 0) ? 'longBreak' : 'shortBreak'
+          const breakDuration = nextBreakType === 'longBreak' 
+            ? get().longBreakDuration 
+            : get().shortBreakDuration
+            
           set({
-            isRunning: false,
             currentRound: currentRound + 1,
-            sessionType: 'shortBreak',
-            timeLeft: get().shortBreakDuration
+            sessionType: nextBreakType,
+            timeLeft: breakDuration
           })
         } else {
-          // Move to next focus session
+          // Move to focus
           set({
-            isRunning: false,
+            currentRound: currentRound + 1,
             sessionType: 'focus',
             timeLeft: get().focusDuration
           })
@@ -186,7 +217,28 @@ const useTimerStore = create<TimerState>()(
         timeLeft: get().sessionType === 'longBreak' ? minutes * 60 : get().timeLeft
       }),
       
-      setSessionsBeforeLongBreak: (count) => set({ sessionsBeforeLongBreak: count })
+      setSessionsBeforeLongBreak: (count) => {
+        set({ sessionsBeforeLongBreak: count })
+      },
+  
+      // Session logging actions
+      logSession: (session) => {
+        const newLog = {
+          ...session,
+          id: Date.now().toString(),
+        }
+        set((state) => ({
+          sessionLogs: [newLog, ...state.sessionLogs],
+        }))
+      },
+      
+      getRecentSessions: (limit = 10) => {
+        return get().sessionLogs.slice(0, limit)
+      },
+      
+      clearSessionLogs: () => {
+        set({ sessionLogs: [] })
+      },
     }),
     {
       name: 'focys-timer-storage',
