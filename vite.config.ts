@@ -6,9 +6,15 @@ import path from 'path';
 export default defineConfig({
   plugins: [react()],
   base: '/',
+  define: {
+    global: 'globalThis',
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      crypto: 'crypto-browserify',
+      stream: 'stream-browserify',
+      events: 'events',
     },
   },
   build: {
