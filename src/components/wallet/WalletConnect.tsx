@@ -1,15 +1,20 @@
-import React from 'react'
-import { useConnect, useDisconnect, useAccount, useEnsName } from 'wagmi'
+import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { useWalletStore } from '@/stores/useWalletStore'
 import { Wallet, LogOut, User } from 'lucide-react'
+import { ethers } from 'ethers'
+
+declare global {
+  interface Window {
+    ethereum?: any;
+  }
+}
 
 export function WalletConnect() {
-  const { connect, connectors, isPending } = useConnect()
-  const { disconnect } = useDisconnect()
-  const { address, isConnected } = useAccount()
-  const { data: ensName } = useEnsName({ address })
+  const [isConnecting, setIsConnecting] = useState(false)
+  const [address, setAddress] = useState<string | null>(null)
+  const [isConnected, setIsConnected] = useState(false)
   
   const { 
     currentProfile, 
@@ -18,20 +23,58 @@ export function WalletConnect() {
     createProfile 
   } = useWalletStore()
 
-  // Handle successful connection
-  React.useEffect(() => {
-    if (isConnected && address) {
-      setConnection(address, 1) // Default to mainnet, will be updated by chain detection
-      
-      // If no profile exists, create one with ENS name if available
-      if (!currentProfile) {
-        createProfile(address, ensName || undefined)
+  // Check if already connected on mount
+  useEffect(() => {
+    checkConnection()
+  }, [])
+
+  const checkConnection = async () => {
+    if (window.ethereum) {
+      try {
+        const accounts = await window.ethereum.request({ method: 'eth_accounts' })
+        if (accounts.length > 0) {
+          setAddress(accounts[0])
+          setIsConnected(true)
+          setConnection(accounts[0], 1)
+          
+          if (!currentProfile) {
+            createProfile(accounts[0])
+          }
+        }
+      } catch (error) {
+        console.error('Error checking connection:', error)
       }
     }
-  }, [isConnected, address, ensName, setConnection, createProfile, currentProfile])
+  }
+
+  const connectWallet = async () => {
+    if (!window.ethereum) {
+      alert('Please install MetaMask or another Web3 wallet!')
+      return
+    }
+
+    setIsConnecting(true)
+    try {
+      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+      if (accounts.length > 0) {
+        setAddress(accounts[0])
+        setIsConnected(true)
+        setConnection(accounts[0], 1)
+        
+        if (!currentProfile) {
+          createProfile(accounts[0])
+        }
+      }
+    } catch (error) {
+      console.error('Error connecting wallet:', error)
+    } finally {
+      setIsConnecting(false)
+    }
+  }
 
   const handleDisconnect = () => {
-    disconnect()
+    setAddress(null)
+    setIsConnected(false)
     storeDisconnect()
   }
 
@@ -56,12 +99,7 @@ export function WalletConnect() {
             </div>
           </div>
           
-          {ensName && (
-            <div className="space-y-2">
-              <div className="text-sm text-muted-foreground">ENS Name</div>
-              <div className="font-medium">{ensName}</div>
-            </div>
-          )}
+
           
           {currentProfile && (
             <div className="space-y-2">
@@ -97,19 +135,16 @@ export function WalletConnect() {
         </p>
         
         <div className="space-y-2">
-          {connectors.map((connector) => (
-            <Button
-              key={connector.uid}
-              onClick={() => connect({ connector })}
-              disabled={isPending}
-              variant="outline"
-              className="w-full justify-start"
-            >
-              <Wallet className="h-4 w-4 mr-2" />
-              {connector.name}
-              {isPending && ' (Connecting...)'}
-            </Button>
-          ))}
+          <Button
+            onClick={connectWallet}
+            disabled={isConnecting}
+            variant="outline"
+            className="w-full justify-start"
+          >
+            <Wallet className="h-4 w-4 mr-2" />
+            {window.ethereum ? 'Connect MetaMask' : 'Install MetaMask'}
+            {isConnecting && ' (Connecting...)'}
+          </Button>
         </div>
         
         <div className="text-xs text-muted-foreground">

@@ -8,24 +8,17 @@ import { Profile } from './pages/Profile'
 import { Button } from './components/ui/button'
 import useTimerStore from './stores/useTimerStore'
 import { useWalletStore } from './stores/useWalletStore'
-import { useAccount } from 'wagmi'
 import { useEffect } from 'react'
 import { Wallet, User } from 'lucide-react'
 
 function AppContent() {
   const initializeTimer = useTimerStore((state) => state.resetTimer)
-  const { address, isConnected } = useAccount()
-  const { currentProfile, setConnection } = useWalletStore()
+  const { currentProfile } = useWalletStore()
 
-  // Initialize app state and handle wallet connection
+  // Initialize app state
   useEffect(() => {
     initializeTimer()
-    
-    // Update wallet store when account changes
-    if (isConnected && address) {
-      setConnection(address, 1) // Default to mainnet
-    }
-  }, [initializeTimer, isConnected, address, setConnection])
+  }, [initializeTimer])
 
   return (
     <Router>
@@ -52,7 +45,7 @@ function AppContent() {
               
               {/* Wallet Status */}
               <div className="flex items-center space-x-2 ml-4 pl-4 border-l border-border">
-                {isConnected && currentProfile ? (
+                {currentProfile && currentProfile.isConnected ? (
                   <div className="flex items-center space-x-2">
                     <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                     <User className="h-4 w-4" />
