@@ -1,6 +1,7 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import path from 'path';
+import inject from '@rollup/plugin-inject';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -33,6 +34,12 @@ export default defineConfig({
           vendor: ['@irys/sdk', 'zustand', '@tanstack/react-query'],
         },
       },
+      plugins: [
+        inject({
+          Buffer: ['buffer', 'Buffer'],
+          process: 'process',
+        }),
+      ],
     },
   },
   server: {
