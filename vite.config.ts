@@ -8,6 +8,7 @@ export default defineConfig({
   base: '/',
   define: {
     global: 'globalThis',
+    'process.env': {},
   },
   resolve: {
     alias: {
@@ -44,6 +45,6 @@ export default defineConfig({
     strictPort: true,
   },
   optimizeDeps: {
-    include: ['@irys/sdk', 'react', 'react-dom', 'react-router-dom'],
+    include: ['@irys/sdk', 'react', 'react-dom', 'react-router-dom', 'buffer'],
   },
 });
