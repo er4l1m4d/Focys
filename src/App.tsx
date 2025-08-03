@@ -5,7 +5,8 @@ import { Dashboard } from './pages/Dashboard'
 import { FocusTimer } from './pages/FocusTimer'
 import { Crystals } from './pages/Crystals'
 import { Profile } from './pages/Profile'
-import { Button } from './components/ui/button'
+import { Achievements } from './pages/Achievements'
+import { FocysNavigation } from './components/navigation/FocysNavigation'
 import useTimerStore from './stores/useTimerStore'
 import { useWalletStore } from './stores/useWalletStore'
 import { useEffect } from 'react'
@@ -23,44 +24,33 @@ function AppContent() {
   return (
     <Router>
       <div className="min-h-screen bg-background">
-        {/* Navigation */}
-        <nav className="border-b border-border bg-card">
+        {/* Header with App Title and Wallet Status */}
+        <header className="border-b border-border bg-card/50 backdrop-blur-sm">
           <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-            <Link to="/" className="text-xl font-bold">
+            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               Focys
             </Link>
-            <div className="flex items-center space-x-4">
-              <Button asChild variant="ghost">
-                <Link to="/">Dashboard</Link>
-              </Button>
-              <Button asChild variant="ghost">
-                <Link to="/timer">Focus Timer</Link>
-              </Button>
-              <Button asChild variant="ghost">
-                <Link to="/crystals">Crystals</Link>
-              </Button>
-              <Button asChild variant="ghost">
-                <Link to="/profile">Profile</Link>
-              </Button>
-              
-              {/* Wallet Status */}
-              <div className="flex items-center space-x-2 ml-4 pl-4 border-l border-border">
-                {currentProfile && currentProfile.isConnected ? (
-                  <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                    <User className="h-4 w-4" />
-                    <span className="text-sm font-medium">{currentProfile.username}</span>
-                  </div>
-                ) : (
-                  <div className="flex items-center space-x-2 text-muted-foreground">
-                    <Wallet className="h-4 w-4" />
-                    <span className="text-sm">Not Connected</span>
-                  </div>
-                )}
-              </div>
+            
+            {/* Wallet Status */}
+            <div className="flex items-center space-x-2">
+              {currentProfile && currentProfile.isConnected ? (
+                <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-200">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <User className="h-4 w-4 text-green-700" />
+                  <span className="text-sm font-medium text-green-700">{currentProfile.username}</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-gray-50 border border-gray-200 text-muted-foreground">
+                  <Wallet className="h-4 w-4" />
+                  <span className="text-sm">Not Connected</span>
+                </div>
+              )}
             </div>
           </div>
-        </nav>
+        </header>
+
+        {/* Navigation */}
+        <FocysNavigation />
 
         {/* Main content */}
         <main className="container mx-auto p-4">
@@ -68,6 +58,7 @@ function AppContent() {
             <Route path="/" element={<Dashboard />} />
             <Route path="/timer" element={<FocusTimer />} />
             <Route path="/crystals" element={<Crystals />} />
+            <Route path="/achievements" element={<Achievements />} />
             <Route path="/profile" element={<Profile />} />
           </Routes>
         </main>
