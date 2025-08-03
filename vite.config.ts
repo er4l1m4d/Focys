@@ -15,6 +15,7 @@ export default defineConfig({
       crypto: 'crypto-browserify',
       stream: 'stream-browserify',
       events: 'events',
+      buffer: 'buffer',
     },
   },
   build: {
