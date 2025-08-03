@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import { Card } from '../ui/card'
-import { Download, Upload, Trash2, BarChart3 } from 'lucide-react'
+import { Download, Upload, Trash2, BarChart3, Loader2, Link2, AlertTriangle } from 'lucide-react'
 import useTimerStore from '../../stores/useTimerStore'
 import { useToast } from '../ui/toast-simple'
+import useSessionStore from '../../stores/useSessionStore'
 
 interface SessionStats {
   totalSessions: number
@@ -218,32 +219,53 @@ const SessionManager: React.FC = () => {
       </Card>
 
       {/* Recent Sessions Preview */}
-      {sessionLogs.length > 0 && (
-        <Card className="p-6">
-          <h3 className="text-lg font-semibold mb-4">Recent Sessions</h3>
-          <div className="space-y-2">
-            {sessionLogs.slice(0, 5).map((session) => (
-              <div key={session.id} className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded">
-                <div className="flex items-center gap-3">
-                  <span className={`w-3 h-3 rounded-full ${
-                    session.type === 'focus' ? 'bg-blue-500' : 
-                    session.type === 'shortBreak' ? 'bg-green-500' : 'bg-orange-500'
-                  }`} />
-                  <span className="capitalize">{session.type.replace('Break', ' Break')}</span>
-                </div>
-                <div className="text-sm text-gray-600">
-                  {formatTime(session.duration)} • {formatDate(new Date(session.endTime).toISOString())}
-                </div>
-              </div>
-            ))}
-            {sessionLogs.length > 5 && (
-              <p className="text-sm text-gray-500 text-center pt-2">
-                And {sessionLogs.length - 5} more sessions...
-              </p>
+      {/* Irys-powered Sessions Preview */}
+const sessions = useSessionStore((state) => state.sessions)
+
+{sessions.length > 0 && (
+  <Card className="p-6">
+    <h3 className="text-lg font-semibold mb-4">Recent Sessions</h3>
+    <div className="space-y-2">
+      {sessions.slice(0, 5).map((session: any) => (
+        <div key={session.id} className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded">
+          <div className="flex items-center gap-3">
+            <span className={`w-3 h-3 rounded-full ${
+              session.sessionType === 'focus' ? 'bg-blue-500' : 
+              session.sessionType === 'shortBreak' ? 'bg-green-500' : 'bg-orange-500'
+            }`} />
+            <span className="capitalize">{session.sessionType.replace('Break', ' Break')}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <span className="text-sm text-gray-600">
+              {formatTime((session.duration ?? 0) * 60)} • {formatDate(new Date(session.endTime || 0).toISOString())}
+            </span>
+            {/* Irys upload status */}
+            {session.irysTxId === undefined ? (
+              <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+            ) : session.irysTxId ? (
+              <a
+                href={`https://gateway.irys.xyz/${session.irysTxId}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1 text-purple-600 hover:underline"
+              >
+                <Link2 className="w-4 h-4" />
+                Irys
+              </a>
+            ) : (
+              <AlertTriangle className="w-4 h-4 text-red-500" />
             )}
           </div>
-        </Card>
+        </div>
+      ))}
+      {sessions.length > 5 && (
+        <p className="text-sm text-gray-500 text-center pt-2">
+          And {sessions.length - 5} more sessions...
+        </p>
       )}
+    </div>
+  </Card>
+)}
     </div>
   )
 }
