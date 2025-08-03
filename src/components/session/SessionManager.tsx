@@ -18,7 +18,8 @@ const SessionManager: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false)
   const [stats, setStats] = useState<SessionStats | null>(null)
   const { toast } = useToast()
-  
+  const sessions = useSessionStore((state) => state.sessions);
+
   const {
     sessionLogs,
     exportSessionsAsFile,
@@ -220,52 +221,50 @@ const SessionManager: React.FC = () => {
 
       {/* Recent Sessions Preview */}
       {/* Irys-powered Sessions Preview */}
-const sessions = useSessionStore((state) => state.sessions)
-
-{sessions.length > 0 && (
-  <Card className="p-6">
-    <h3 className="text-lg font-semibold mb-4">Recent Sessions</h3>
-    <div className="space-y-2">
-      {sessions.slice(0, 5).map((session: any) => (
-        <div key={session.id} className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded">
-          <div className="flex items-center gap-3">
-            <span className={`w-3 h-3 rounded-full ${
-              session.sessionType === 'focus' ? 'bg-blue-500' : 
-              session.sessionType === 'shortBreak' ? 'bg-green-500' : 'bg-orange-500'
-            }`} />
-            <span className="capitalize">{session.sessionType.replace('Break', ' Break')}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">
-              {formatTime((session.duration ?? 0) * 60)} • {formatDate(new Date(session.endTime || 0).toISOString())}
-            </span>
-            {/* Irys upload status */}
-            {session.irysTxId === undefined ? (
-              <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
-            ) : session.irysTxId ? (
-              <a
-                href={`https://gateway.irys.xyz/${session.irysTxId}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-1 text-purple-600 hover:underline"
-              >
-                <Link2 className="w-4 h-4" />
-                Irys
-              </a>
-            ) : (
-              <AlertTriangle className="w-4 h-4 text-red-500" />
+      {sessions.length > 0 && (
+        <Card className="p-6">
+          <h3 className="text-lg font-semibold mb-4">Recent Sessions</h3>
+          <div className="space-y-2">
+            {sessions.slice(0, 5).map((session: any) => (
+              <div key={session.id} className="flex justify-between items-center py-2 px-3 bg-gray-50 rounded">
+                <div className="flex items-center gap-3">
+                  <span className={`w-3 h-3 rounded-full ${
+                    session.sessionType === 'focus' ? 'bg-blue-500' : 
+                    session.sessionType === 'shortBreak' ? 'bg-green-500' : 'bg-orange-500'
+                  }`} />
+                  <span className="capitalize">{session.sessionType.replace('Break', ' Break')}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="text-sm text-gray-600">
+                    {formatTime((session.duration ?? 0) * 60)} • {formatDate(new Date(session.endTime || 0).toISOString())}
+                  </span>
+                  {/* Irys upload status */}
+                  {session.irysTxId === undefined ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-gray-400" />
+                  ) : session.irysTxId ? (
+                    <a
+                      href={`https://gateway.irys.xyz/${session.irysTxId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex items-center gap-1 text-purple-600 hover:underline"
+                    >
+                      <Link2 className="w-4 h-4" />
+                      Irys
+                    </a>
+                  ) : (
+                    <AlertTriangle className="w-4 h-4 text-red-500" />
+                  )}
+                </div>
+              </div>
+            ))}
+            {sessions.length > 5 && (
+              <p className="text-sm text-gray-500 text-center pt-2">
+                And {sessions.length - 5} more sessions...
+              </p>
             )}
           </div>
-        </div>
-      ))}
-      {sessions.length > 5 && (
-        <p className="text-sm text-gray-500 text-center pt-2">
-          And {sessions.length - 5} more sessions...
-        </p>
+        </Card>
       )}
-    </div>
-  </Card>
-)}
     </div>
   )
 }
