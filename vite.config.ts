@@ -18,6 +18,7 @@ export default defineConfig({
       stream: 'stream-browserify',
       events: 'events',
       buffer: 'buffer',
+      './globalThis-config.mjs': path.resolve(__dirname, 'src/utils/empty-module.js'),
     },
   },
   build: {
