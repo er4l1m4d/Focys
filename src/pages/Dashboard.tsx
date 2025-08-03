@@ -15,81 +15,81 @@ export function Dashboard() {
   const recentAchievements = getUnlockedAchievements().slice(0, 3)
 
   return (
-    <div className="container mx-auto p-4 space-y-6">
-      {/* Welcome Section */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Dashboard</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-gray-600 mb-4">
-            Welcome to your Focys dashboard. Track your focus sessions and progress here.
-          </p>
-          <Button className="w-full sm:w-auto">
-            <Target className="w-4 h-4 mr-2" />
-            Start Focus Session
-          </Button>
-        </CardContent>
-      </Card>
+    <div className="container mx-auto p-4 space-y-6 max-w-6xl">
+      {/* Welcome Section - Enhanced mobile layout */}
+      <div className="text-center py-6">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3" style={{ color: '#51FED6' }}>
+          Welcome to Focys
+        </h1>
+        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+          Track your focus sessions, earn XP, and build your focus streak. Your journey to better productivity starts here.
+        </p>
+        <Button className="w-full sm:w-auto h-12 sm:h-10 text-base sm:text-sm font-semibold shadow-lg px-8" style={{ backgroundColor: '#51FED6', color: 'white' }}>
+          <Target className="w-5 h-5 mr-2" />
+          Start Focus Session
+        </Button>
+      </div>
 
       {/* Level Progress */}
       <LevelProgress />
 
-      {/* Quick Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-              <Target className="w-5 h-5 text-blue-600" />
+      {/* Quick Stats - Enhanced mobile cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+        <Card className="p-4 sm:p-6 border-2 border-blue-100 hover:border-blue-200 transition-colors bg-gradient-to-br from-blue-50 to-blue-100/50">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg">
+              <Target className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
             </div>
-            <div>
-              <div className="text-2xl font-bold text-blue-600">{totalSessions}</div>
-              <div className="text-sm text-gray-600">Total Sessions</div>
-            </div>
-          </div>
-        </Card>
-
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
-              <Flame className="w-5 h-5 text-orange-600" />
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-orange-600">{consecutiveDays}</div>
-              <div className="text-sm text-gray-600">Day Streak</div>
+            <div className="flex-1">
+              <div className="text-2xl sm:text-3xl font-bold text-blue-600">{totalSessions}</div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">Total Sessions</div>
             </div>
           </div>
         </Card>
 
-        <Card className="p-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-              <Trophy className="w-5 h-5 text-green-600" />
+        <Card className="p-4 sm:p-6 border-2 border-orange-100 hover:border-orange-200 transition-colors bg-gradient-to-br from-orange-50 to-orange-100/50">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center shadow-lg">
+              <Flame className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
             </div>
-            <div>
-              <div className="text-2xl font-bold text-green-600">{Math.floor(totalFocusMinutes / 60)}h</div>
-              <div className="text-sm text-gray-600">Focus Time</div>
+            <div className="flex-1">
+              <div className="text-2xl sm:text-3xl font-bold text-orange-600">{consecutiveDays}</div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">Day Streak</div>
+            </div>
+          </div>
+        </Card>
+
+        <Card className="p-4 sm:p-6 border-2 border-green-100 hover:border-green-200 transition-colors bg-gradient-to-br from-green-50 to-green-100/50 sm:col-span-2 lg:col-span-1">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center shadow-lg">
+              <Trophy className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
+            </div>
+            <div className="flex-1">
+              <div className="text-2xl sm:text-3xl font-bold text-green-600">{Math.floor(totalFocusMinutes / 60)}h</div>
+              <div className="text-sm sm:text-base text-gray-600 font-medium">Focus Time</div>
             </div>
           </div>
         </Card>
       </div>
 
-      {/* Recent Achievements */}
+      {/* Recent Achievements - Enhanced mobile layout */}
       {recentAchievements.length > 0 && (
-        <Card className="p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <Trophy className="w-5 h-5 text-yellow-600" />
-            <h3 className="font-semibold">Recent Achievements</h3>
+        <Card className="p-4 sm:p-6 border-2 border-yellow-100 bg-gradient-to-br from-yellow-50 to-amber-50">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-amber-500 rounded-full flex items-center justify-center">
+              <Trophy className="w-4 h-4 text-white" />
+            </div>
+            <h3 className="text-lg sm:text-xl font-bold text-yellow-700">Recent Achievements</h3>
           </div>
-          <div className="space-y-2">
+          <div className="space-y-3">
             {recentAchievements.map((achievement) => (
-              <div key={achievement.id} className="flex items-center gap-3 p-2 bg-yellow-50 rounded-lg">
-                <span className="text-xl">{achievement.icon}</span>
-                <div className="flex-1">
-                  <h4 className="font-medium text-sm">{achievement.title}</h4>
-                  <p className="text-xs text-gray-600">{achievement.description}</p>
+              <div key={achievement.id} className="flex items-center gap-4 p-3 sm:p-4 bg-white/80 rounded-xl border border-yellow-200 shadow-sm hover:shadow-md transition-shadow">
+                <span className="text-2xl sm:text-3xl">{achievement.icon}</span>
+                <div className="flex-1 min-w-0">
+                  <h4 className="font-semibold text-sm sm:text-base text-gray-800 truncate">{achievement.title}</h4>
+                  <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{achievement.description}</p>
                 </div>
-                <div className="text-xs text-yellow-600 font-medium">
+                <div className="text-sm sm:text-base text-yellow-600 font-bold bg-yellow-100 px-2 py-1 rounded-full">
                   +{achievement.xpReward} XP
                 </div>
               </div>

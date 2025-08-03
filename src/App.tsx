@@ -27,7 +27,7 @@ function AppContent() {
         {/* Header with App Title and Wallet Status */}
         <header className="border-b border-border bg-card/50 backdrop-blur-sm">
           <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-            <Link to="/" className="text-2xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <Link to="/" className="text-2xl font-bold" style={{ color: '#51FED6' }}>
               Focys
             </Link>
             
@@ -52,8 +52,8 @@ function AppContent() {
         {/* Navigation */}
         <FocysNavigation />
 
-        {/* Main content */}
-        <main className="container mx-auto p-4">
+        {/* Main content - Mobile-optimized spacing */}
+        <main className="pb-4 sm:pb-6">
           <Routes>
             <Route path="/" element={<Dashboard />} />
             <Route path="/timer" element={<FocusTimer />} />
