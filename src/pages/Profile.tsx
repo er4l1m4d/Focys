@@ -2,12 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import SessionManager from "@/components/session/SessionManager"
 import { WalletConnect } from "@/components/wallet/WalletConnect"
 import { ProfileEditor } from "@/components/wallet/ProfileEditor"
-import { useAccount } from 'wagmi'
 import { useWalletStore } from '@/stores/useWalletStore'
 
 export function Profile() {
-  const { isConnected } = useAccount()
   const { currentProfile } = useWalletStore()
+  const isConnected = currentProfile?.isConnected || false
 
   return (
     <div className="container mx-auto p-4 space-y-6">
