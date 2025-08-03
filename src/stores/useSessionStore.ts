@@ -51,7 +51,7 @@ const useSessionStore = create<SessionState>()(
         return sessionId
       },
 
-      endCurrentSession: (notes = '') => {
+      endCurrentSession: async (notes = '') => {
         const { currentSession } = get()
         if (!currentSession) return
 
@@ -76,6 +76,40 @@ const useSessionStore = create<SessionState>()(
           sessions: [completedSession, ...state.sessions],
           currentSession: null
         }))
+
+        // Auto-upload session to Irys
+        try {
+          const { getIrysService } = await import("../utils/irys/irysService");
+          const irys = getIrysService();
+          await irys.initialize();
+
+          // Get wallet address from user store
+          const userStore = useUserStore.getState();
+          const walletAddress = userStore.walletAddress || "";
+
+          const sessionPayload = {
+            ...completedSession,
+            walletAddress,
+            uploadedAt: new Date().toISOString()
+          };
+
+          const uploadRes = await irys.uploadData(JSON.stringify(sessionPayload), [
+            { name: "Session-Id", value: completedSession.id },
+            { name: "Wallet-Address", value: walletAddress },
+            { name: "Session-Type", value: completedSession.sessionType },
+          ]);
+          // Save Irys txId to session
+          set((state) => ({
+            sessions: state.sessions.map((session) =>
+              session.id === completedSession.id
+                ? { ...session, irysTxId: uploadRes.id }
+                : session
+            )
+          }));
+        } catch (err) {
+          console.error("Irys auto-upload failed:", err);
+          // Optionally: set error on session or global state
+        }
 
         // Update user stats
         const userStore = useUserStore.getState()
