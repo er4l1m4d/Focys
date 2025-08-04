@@ -7,14 +7,12 @@ import { Crystals } from './pages/Crystals'
 import { Profile } from './pages/Profile'
 import { Achievements } from './pages/Achievements'
 import { FocysNavigation } from './components/navigation/FocysNavigation'
+import { UserProfile } from './components/profile/UserProfile'
 import useTimerStore from './stores/useTimerStore'
-import { useWalletStore } from './stores/useWalletStore'
 import { useEffect } from 'react'
-import { Wallet, User } from 'lucide-react'
 
 function AppContent() {
   const initializeTimer = useTimerStore((state) => state.resetTimer)
-  const { currentProfile } = useWalletStore()
 
   // Initialize app state
   useEffect(() => {
@@ -31,21 +29,8 @@ function AppContent() {
               Focys
             </Link>
             
-            {/* Wallet Status */}
-            <div className="flex items-center space-x-2">
-              {currentProfile && currentProfile.isConnected ? (
-                <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-green-50 border border-green-200">
-                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-                  <User className="h-4 w-4 text-green-700" />
-                  <span className="text-sm font-medium text-green-700">{currentProfile.username}</span>
-                </div>
-              ) : (
-                <div className="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-gray-50 border border-gray-200 text-muted-foreground">
-                  <Wallet className="h-4 w-4" />
-                  <span className="text-sm">Not Connected</span>
-                </div>
-              )}
-            </div>
+            {/* User Profile */}
+            <UserProfile />
           </div>
         </header>
 
