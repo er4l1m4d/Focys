@@ -1,7 +1,9 @@
-import { HeroSection } from "@/components/ui/hero-section";
+import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
+import dashboardImage from "../../focys dashboard.png";
+import { FeaturesSectionWithHoverEffects } from "@/components/ui/feature-section-with-hover-effects";
+import { Github } from "lucide-react";
 import { useWalletStore } from "@/stores/useWalletStore";
 import { useNavigate } from "react-router-dom";
-import { ArrowRight, Github } from "lucide-react";
 
 export default function Landing() {
   const { setConnection, currentProfile } = useWalletStore();
@@ -33,36 +35,33 @@ export default function Landing() {
   }
 
   return (
-    <HeroSection
-      badge={{
-        text: "Introducing Focys",
-        action: {
-          text: "Learn more",
-          href: "/about",
-        },
-      }}
-      title="Gamify Your Focus."
-      description="Focys helps you build deep focus habits and track your progress, with Web3-powered rewards and permanent session history."
-      actions={[
-        {
-          text: "Get Started",
-          href: "#",
-          icon: <ArrowRight className="h-5 w-5" />, 
-          variant: "default",
-          onClick: connectWallet,
-        },
-        {
-          text: "GitHub",
-          href: "https://github.com/er4l1m4d/Focys",
-          icon: <Github className="h-5 w-5" />, 
-          variant: "outline",
-        },
-      ]}
-      image={{
-        light: "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1248&q=80",
-        dark: "https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=1248&q=80",
-        alt: "Focys App Screenshot",
-      }}
-    />
+    <div className="w-full flex flex-col items-center">
+      <div className="w-full max-w-4xl mx-auto">
+        <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10 mt-8 md:mt-12 w-full">
+          <div className="flex-1 min-w-0 md:max-w-[50%] px-2">
+            <h1 className="text-4xl md:text-5xl font-bold heading-outfit text-foreground mb-4 text-center md:text-left">Gamify Your Focus.</h1>
+            <p className="text-lg text-foreground mb-4 text-center md:text-left">Focys is your all-in-one focus companion: track Pomodoro sessions, earn XP, collect crystals, and store your achievements on Web3. Level up your productivity and own your progress—anywhere, anytime.</p>
+            <div className="flex justify-center md:justify-start mt-4">
+              <InteractiveHoverButton text="Connect Wallet" onClick={connectWallet} />
+            </div>
+          </div>
+          <div className="flex-1 min-w-0 md:max-w-[50%] flex justify-center md:justify-end px-2">
+            <img
+              src={dashboardImage}
+              alt="Focys Dashboard Screenshot"
+              className="rounded-xl shadow-lg object-cover w-full h-auto max-h-[340px]"
+              style={{maxWidth: '100%', aspectRatio: '16/7', background:'#181B23'}} // fallback bg for transparency
+            />
+          </div>
+        </div>
+      </div>
+      <div className="mt-16">
+        <FeaturesSectionWithHoverEffects />
+      </div>
+      <footer className="w-full py-6 flex justify-center items-center text-sm text-muted-foreground">
+        Made with <span className="mx-1 text-red-500">♥</span> by <a href="https://x.com/jigz_crypto" target="_blank" rel="noopener noreferrer" className="underline hover:text-primary">Jigz</a>
+      </footer>
+    </div>
   );
 }
+

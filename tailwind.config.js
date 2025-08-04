@@ -42,8 +42,8 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        mono: ['Inter', 'sans-serif'],
+        sans: ["Inter", ...require("tailwindcss/defaultTheme").fontFamily.sans],
+        outfit: ["Outfit", "sans-serif"],
       },
       animation: {
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',

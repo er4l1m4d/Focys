@@ -32,14 +32,13 @@ function AppContent() {
             <Link to="/" className="text-2xl font-bold" style={{ color: '#51FED6' }}>
               Focys
             </Link>
-            
-            {/* User Profile */}
-            <UserProfile />
+            {/* Only show UserProfile if connected and not on landing page */}
+            {isConnected && window.location.pathname !== '/' && <UserProfile />}
           </div>
         </header>
 
-        {/* Navigation */}
-        <FocysNavigation />
+        {/* Only show navigation if connected and not on landing page */}
+        {isConnected && window.location.pathname !== '/' && <FocysNavigation />}
 
         {/* Main content - Mobile-optimized spacing */}
         <main className="pb-4 sm:pb-6">
