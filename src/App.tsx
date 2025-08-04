@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
 import { ToastProvider } from './components/ui/toast-simple'
 import { Web3Provider } from './providers/Web3Provider'
 import { Dashboard } from './pages/Dashboard'
+import Landing from './pages/Landing'
 import { FocusTimer } from './pages/FocusTimer'
 import { Crystals } from './pages/Crystals'
 import { Profile } from './pages/Profile'
@@ -11,7 +12,10 @@ import { UserProfile } from './components/profile/UserProfile'
 import useTimerStore from './stores/useTimerStore'
 import { useEffect } from 'react'
 
+import { useWalletStore } from './stores/useWalletStore'
+
 function AppContent() {
+  const isConnected = useWalletStore((state) => state.isConnected);
   const initializeTimer = useTimerStore((state) => state.resetTimer)
 
   // Initialize app state
@@ -40,11 +44,12 @@ function AppContent() {
         {/* Main content - Mobile-optimized spacing */}
         <main className="pb-4 sm:pb-6">
           <Routes>
-            <Route path="/" element={<Dashboard />} />
+            <Route path="/" element={<Landing />} />
+            <Route path="/dashboard" element={isConnected ? <Dashboard /> : <Landing />} />
             <Route path="/timer" element={<FocusTimer />} />
             <Route path="/crystals" element={<Crystals />} />
-            <Route path="/achievements" element={<Achievements />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/achievements" element={<Achievements />} />
           </Routes>
         </main>
       </div>
