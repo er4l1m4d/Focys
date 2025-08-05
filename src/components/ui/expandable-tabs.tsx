@@ -6,9 +6,13 @@ import { useOnClickOutside } from "usehooks-ts";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
 
+type AnimationGeneratorType = 'spring' | 'tween' | 'inertia' | 'keyframes' | 'just' | 'decay' | undefined;
+
 interface Tab {
   title: string;
-  icon: LucideIcon;
+  icon?: LucideIcon;
+  customComponent?: React.ReactNode;
+  preventExpand?: boolean;
   type?: never;
 }
 
@@ -16,6 +20,8 @@ interface Separator {
   type: "separator";
   title?: never;
   icon?: never;
+  customComponent?: never;
+  preventExpand?: never;
 }
 
 type TabItem = Tab | Separator;
@@ -46,7 +52,7 @@ const spanVariants = {
   exit: { width: 0, opacity: 0 },
 };
 
-const transition = { delay: 0.1, type: "spring", bounce: 0, duration: 0.6 };
+const transition = { delay: 0.1, type: "spring" as AnimationGeneratorType, bounce: 0, duration: 0.6 };
 
 export function ExpandableTabs({
   tabs,
@@ -68,14 +74,14 @@ export function ExpandableTabs({
   };
 
   const Separator = () => (
-    <div className="mx-1 h-[24px] w-[1.2px] bg-border" aria-hidden="true" />
+    <div className="mx-1 h-6 w-px bg-border/50" aria-hidden="true" />
   );
 
   return (
     <div
       ref={outsideClickRef}
       className={cn(
-        "flex flex-wrap items-center gap-2 rounded-2xl border bg-background p-1 shadow-sm",
+        "flex flex-wrap items-center gap-2 p-1",
         className
       )}
     >
@@ -84,7 +90,19 @@ export function ExpandableTabs({
           return <Separator key={`separator-${index}`} />;
         }
 
+        // If there's a custom component, render it directly
+        if (tab.customComponent) {
+          return (
+            <div key={tab.title} className="flex items-center">
+              {tab.customComponent}
+            </div>
+          );
+        }
+
+        // Otherwise, render the standard tab with icon and title
         const Icon = tab.icon;
+        if (!Icon) return null;
+
         return (
           <motion.button
             key={tab.title}
@@ -95,10 +113,10 @@ export function ExpandableTabs({
             onClick={() => handleSelect(index)}
             transition={transition}
             className={cn(
-              "relative flex items-center rounded-xl px-4 py-2 text-sm font-medium transition-colors duration-300",
+              "relative flex items-center rounded-xl px-4 py-2 text-sm font-outfit font-medium transition-all duration-200 bg-transparent",
               selected === index
-                ? cn("bg-muted", activeColor)
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                ? cn("text-teal-400 font-semibold hover:bg-teal-400/10", activeColor)
+                : "text-muted-foreground hover:text-teal-400 hover:bg-teal-400/5"
             )}
           >
             <Icon size={20} />

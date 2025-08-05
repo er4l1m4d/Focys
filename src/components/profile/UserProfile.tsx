@@ -16,14 +16,14 @@ import { useWalletStore } from '@/stores/useWalletStore';
 
 export function UserProfile() {
   const navigate = useNavigate();
-  const { currentProfile, disconnectWallet } = useWalletStore();
+  const { currentProfile, disconnect } = useWalletStore();
 
   const handleViewProfile = () => {
     navigate('/profile');
   };
 
   const handleSignOut = () => {
-    disconnectWallet();
+    disconnect();
   };
 
   if (!currentProfile || !currentProfile.isConnected) {
@@ -74,8 +74,8 @@ export function UserProfile() {
             <div>
               <PopoverTitle>{currentProfile.username}</PopoverTitle>
               <PopoverDescription className="text-xs">
-                {currentProfile.walletAddress ? 
-                  `${currentProfile.walletAddress.slice(0, 6)}...${currentProfile.walletAddress.slice(-4)}` : 
+                {currentProfile.address ? 
+                  `${currentProfile.address.slice(0, 6)}...${currentProfile.address.slice(-4)}` : 
                   'Wallet connected'
                 }
               </PopoverDescription>

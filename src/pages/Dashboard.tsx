@@ -21,7 +21,7 @@ export function Dashboard() {
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3" style={{ color: '#51FED6' }}>
           Welcome to Focys
         </h1>
-        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-400 mb-6 max-w-2xl mx-auto">
+        <p className="text-sm sm:text-base text-foreground/80 mb-6 max-w-2xl mx-auto">
           Track your focus sessions, earn XP, and build your focus streak. Your journey to better productivity starts here.
         </p>
         <Button className="w-full sm:w-auto h-12 sm:h-10 text-base sm:text-sm font-semibold shadow-lg px-8" style={{ backgroundColor: '#51FED6', color: 'white' }}>
@@ -41,8 +41,8 @@ export function Dashboard() {
               <Target className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
             </div>
             <div className="flex-1">
-              <div className="text-2xl sm:text-3xl font-bold text-blue-600">{totalSessions}</div>
-              <div className="text-sm sm:text-base text-gray-600 font-medium">Total Sessions</div>
+              <div className="text-2xl sm:text-3xl font-bold text-blue-600 dark:text-blue-400">{totalSessions}</div>
+              <div className="text-sm sm:text-base text-foreground/80 font-medium">Total Sessions</div>
             </div>
           </div>
         </Card>
@@ -53,8 +53,8 @@ export function Dashboard() {
               <Flame className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
             </div>
             <div className="flex-1">
-              <div className="text-2xl sm:text-3xl font-bold text-orange-600">{consecutiveDays}</div>
-              <div className="text-sm sm:text-base text-gray-600 font-medium">Day Streak</div>
+              <div className="text-2xl sm:text-3xl font-bold text-orange-600 dark:text-orange-400">{consecutiveDays}</div>
+              <div className="text-sm sm:text-base text-foreground/80 font-medium">Day Streak</div>
             </div>
           </div>
         </Card>
@@ -65,8 +65,8 @@ export function Dashboard() {
               <Trophy className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
             </div>
             <div className="flex-1">
-              <div className="text-2xl sm:text-3xl font-bold text-green-600">{Math.floor(totalFocusMinutes / 60)}h</div>
-              <div className="text-sm sm:text-base text-gray-600 font-medium">Focus Time</div>
+              <div className="text-2xl sm:text-3xl font-bold text-green-600 dark:text-green-400">{Math.floor(totalFocusMinutes / 60)}h</div>
+              <div className="text-sm sm:text-base text-foreground/80 font-medium">Focus Time</div>
             </div>
           </div>
         </Card>
@@ -79,17 +79,17 @@ export function Dashboard() {
             <div className="w-8 h-8 bg-gradient-to-br from-yellow-500 to-amber-500 rounded-full flex items-center justify-center">
               <Trophy className="w-4 h-4 text-white" />
             </div>
-            <h3 className="text-lg sm:text-xl font-bold text-yellow-700">Recent Achievements</h3>
+            <h3 className="text-lg sm:text-xl font-bold text-yellow-700 dark:text-yellow-400">Recent Achievements</h3>
           </div>
           <div className="space-y-3">
             {recentAchievements.map((achievement) => (
               <div key={achievement.id} className="flex items-center gap-4 p-3 sm:p-4 bg-white/80 rounded-xl border border-yellow-200 shadow-sm hover:shadow-md transition-shadow">
                 <span className="text-2xl sm:text-3xl">{achievement.icon}</span>
                 <div className="flex-1 min-w-0">
-                  <h4 className="font-semibold text-sm sm:text-base text-gray-800 truncate">{achievement.title}</h4>
-                  <p className="text-xs sm:text-sm text-gray-600 line-clamp-2">{achievement.description}</p>
+                  <h4 className="font-semibold text-sm sm:text-base text-foreground truncate">{achievement.title}</h4>
+                  <p className="text-xs sm:text-sm text-foreground/80 line-clamp-2">{achievement.description}</p>
                 </div>
-                <div className="text-sm sm:text-base text-yellow-600 font-bold bg-yellow-100 px-2 py-1 rounded-full">
+                <div className="text-sm sm:text-base text-yellow-600 dark:text-yellow-400 font-bold bg-yellow-100 dark:bg-yellow-900/30 px-2 py-1 rounded-full">
                   +{achievement.xpReward} XP
                 </div>
               </div>

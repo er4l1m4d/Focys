@@ -94,6 +94,13 @@ export const useWalletStore = create<WalletState>()(
           }))
         }
 
+        // Redirect to landing page after state update
+        setTimeout(() => {
+          if (typeof window !== 'undefined') {
+            window.location.href = '/';
+          }
+        }, 0);
+
         set({
           isConnected: false,
           address: null,

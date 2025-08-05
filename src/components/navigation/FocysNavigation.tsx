@@ -1,12 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { ExpandableTabs } from '@/components/ui/expandable-tabs';
-import { 
-  Home, 
-  Timer, 
-  Gem, 
-  User, 
-  Trophy
-} from 'lucide-react';
+import { Home, Timer, Trophy, Gem } from 'lucide-react';
+import focysLogo from '../../../focys logo - square .png';
+import { UserProfile } from '../profile/UserProfile';
+import { ThemeToggle } from '../theme/ThemeToggle';
 
 export function FocysNavigation() {
   const navigate = useNavigate();
@@ -16,8 +13,7 @@ export function FocysNavigation() {
     { title: "Focus Timer", icon: Timer },
     { type: "separator" as const },
     { title: "Crystals", icon: Gem },
-    { title: "Achievements", icon: Trophy },
-    { title: "Profile", icon: User },
+    { title: "Achievements", icon: Trophy }
   ];
 
 
@@ -48,13 +44,28 @@ export function FocysNavigation() {
   };
 
   return (
-    <div className="w-full flex justify-center p-4">
-      <ExpandableTabs
-        tabs={tabs}
-        activeColor="text-purple-600"
-        className="border-purple-200 dark:border-purple-800 bg-white/80 backdrop-blur-sm"
-        onChange={handleTabChange}
-      />
+    <div className="w-full flex items-center justify-between p-4 sticky top-0 z-40 bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
+      <button
+        className="flex items-center gap-2 text-xl font-extrabold hover:text-teal-400 transition-colors px-2 py-1 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
+        onClick={() => navigate('/dashboard')}
+        aria-label="Go to dashboard"
+      >
+        <img src={focysLogo} alt="Focys logo" className="w-8 h-8 rounded-lg shadow-sm object-cover bg-white" />
+        <span className="hidden sm:inline font-outfit font-bold tracking-tight text-[#169183]">Focys</span>
+      </button>
+      
+      <div className="flex items-center gap-4">
+        <ExpandableTabs
+          tabs={tabs}
+          activeColor="text-teal-400"
+          className=""
+          onChange={handleTabChange}
+        />
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <UserProfile />
+        </div>
+      </div>
     </div>
   );
 }
