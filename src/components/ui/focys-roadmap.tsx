@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Badge } from "@/components/ui/badge";
@@ -164,6 +163,11 @@ const getCategoryIcon = (category?: string) => {
 };
 
 function FocysRoadmap({ items = focysRoadmapData, className }: RoadmapProps) {
+  // Find the current phase index (first 'in-progress', fallback to last 'completed', else 0)
+  const currentPhaseIndex = items.findIndex(item => item.status === 'in-progress');
+  const completedIdx = items.map(i => i.status).lastIndexOf('completed');
+  const activeIndex = currentPhaseIndex !== -1 ? currentPhaseIndex : (completedIdx !== -1 ? completedIdx : 0);
+
   return (
     <div className={cn("w-full max-w-6xl mx-auto px-4 py-16", className)}>
       <motion.div
@@ -209,10 +213,13 @@ function FocysRoadmap({ items = focysRoadmapData, className }: RoadmapProps) {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 className="relative"
               >
-                {/* Timeline dot */}
-                <div 
-                  className="absolute left-6 top-6 w-3 h-3 rounded-full bg-background border-2 z-10 transform -translate-x-1/2 hidden md:block"
-                  style={{ borderColor: '#169183' }}
+                {/* Timeline dot: only color current phase */}
+                <div
+                  className={cn(
+                    "absolute left-6 top-6 w-3 h-3 rounded-full border-2 z-10 transform -translate-x-1/2 hidden md:block",
+                    index === activeIndex ? 'bg-[#169183] border-[#169183]' : 'bg-background border-background'
+                  )}
+                  aria-label={index === activeIndex ? 'Current phase' : undefined}
                 />
 
                 <Card className={cn(
@@ -288,15 +295,7 @@ function FocysRoadmap({ items = focysRoadmapData, className }: RoadmapProps) {
           })}
         </div>
 
-        {/* End marker */}
-        <motion.div
-          className="absolute left-6 -bottom-4 w-3 h-3 rounded-full transform -translate-x-1/2 hidden md:block"
-          style={{ backgroundColor: '#169183' }}
-          initial={{ opacity: 0, scale: 0 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: items.length * 0.1 + 0.5, type: "spring" }}
-        />
+
       </div>
 
       <motion.div

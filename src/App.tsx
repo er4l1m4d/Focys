@@ -74,17 +74,16 @@ function AppContent() {
   return (
     <Router>
       <div className="min-h-screen bg-background text-foreground">
-        {/* Show navigation with integrated logo if connected and not on landing page */}
-        {isConnected && window.location.pathname !== '/' && (
-          <FocysNavigation />
-        )}
+        {/* Always show navigation if connected, regardless of route */}
+        {isConnected && <FocysNavigation />}
         
-        {/* Show minimal header only on landing page */}
-        {(!isConnected || window.location.pathname === '/') && (
+        {/* Show minimal header only when not connected */}
+        {!isConnected && (
           <header className="border-b border-border bg-card/50 backdrop-blur-sm">
             <div className="container mx-auto px-4 py-3 flex justify-between items-center">
-              <Link to="/" className="text-2xl font-outfit font-bold" style={{ color: '#169183' }}>
-                Focys
+              <Link to="/" className="flex items-center gap-2">
+                <img src="./focys logo - square .png" alt="Focys logo" className="w-8 h-8 object-contain" />
+                <span className="text-2xl font-outfit font-bold" style={{ color: '#169183' }}>Focys</span>
               </Link>
               <div className="flex items-center gap-4">
                 <ThemeToggle />

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { Button } from '../ui/button'
 import { Card } from '../ui/card'
-import { Download, Upload, Trash2, BarChart3, Loader2, Link2, AlertTriangle } from 'lucide-react'
+import { Download, Upload, BarChart3, Loader2, Link2, AlertTriangle } from 'lucide-react'
 import useTimerStore from '../../stores/useTimerStore'
 import { useToast } from '../ui/toast-simple'
 import useSessionStore from '../../stores/useSessionStore'
@@ -25,7 +25,6 @@ const SessionManager: React.FC = () => {
     exportSessionsAsFile,
     exportSessionsAsJson,
     importSessionsFromJson,
-    clearSessionLogs,
     getSessionStats,
     saveSessionsToStorage
   } = useTimerStore()
@@ -93,13 +92,7 @@ const SessionManager: React.FC = () => {
     input.click()
   }
 
-  const handleClearAll = () => {
-    if (window.confirm('Are you sure you want to delete all session data? This action cannot be undone.')) {
-      clearSessionLogs()
-      toast({ title: 'Success', description: 'All session data cleared', type: 'success' })
-      setStats(null)
-    }
-  }
+
 
   const formatTime = (seconds: number): string => {
     const hours = Math.floor(seconds / 3600)
@@ -181,35 +174,24 @@ const SessionManager: React.FC = () => {
             <Button 
               onClick={handleExportJson}
               disabled={isLoading || sessionLogs.length === 0}
-              variant="outline"
-              className="flex items-center gap-2"
+              variant="default"
+              className="flex items-center gap-2 hover:bg-[#169183] hover:text-white transition-colors"
             >
-              <Download className="w-4 h-4" />
+              <Link2 className="w-4 h-4" />
               Copy to Clipboard
             </Button>
             
             <Button 
               onClick={handleImport}
               disabled={isLoading}
-              variant="outline"
-              className="flex items-center gap-2"
+              variant="default"
+              className="flex items-center gap-2 hover:bg-[#169183] hover:text-white transition-colors"
             >
               <Upload className="w-4 h-4" />
               Import Sessions
             </Button>
           </div>
-          
-          <div className="pt-4 border-t">
-            <Button 
-              onClick={handleClearAll}
-              disabled={isLoading || sessionLogs.length === 0}
-              variant="outline"
-              className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50"
-            >
-              <Trash2 className="w-4 h-4" />
-              Clear All Data
-            </Button>
-          </div>
+
         </div>
         
         <div className="mt-4 text-sm text-gray-600">

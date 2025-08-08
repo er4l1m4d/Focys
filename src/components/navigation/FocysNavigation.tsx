@@ -11,7 +11,6 @@ export function FocysNavigation() {
   const tabs = [
     { title: "Dashboard", icon: Home },
     { title: "Focus Timer", icon: Timer },
-    { type: "separator" as const },
     { title: "Crystals", icon: Gem },
     { title: "Achievements", icon: Trophy }
   ];
@@ -21,12 +20,18 @@ export function FocysNavigation() {
   const handleTabChange = (index: number | null) => {
     if (index === null) return;
     
-    // Calculate actual tab index accounting for separators
-    const tabIndex = tabs.filter((_, i) => i <= index && tabs[i].type !== 'separator').length - 1;
+    // Get the actual tab by index, skipping separators
+    let tabCount = -1;
+    for (let i = 0; i <= index; i++) {
+      if (tabs[i].type !== 'separator') {
+        tabCount++;
+      }
+    }
     
-    switch (tabIndex) {
+    // Navigate based on the actual tab index
+    switch (tabCount) {
       case 0:
-        navigate('/');
+        navigate('/dashboard');
         break;
       case 1:
         navigate('/timer');
@@ -50,7 +55,7 @@ export function FocysNavigation() {
         onClick={() => navigate('/dashboard')}
         aria-label="Go to dashboard"
       >
-        <img src={focysLogo} alt="Focys logo" className="w-8 h-8 rounded-lg shadow-sm object-cover bg-white" />
+        <img src={focysLogo} alt="Focys logo" className="w-8 h-8 object-contain" />
         <span className="hidden sm:inline font-outfit font-bold tracking-tight text-[#169183]">Focys</span>
       </button>
       

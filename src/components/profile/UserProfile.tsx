@@ -84,8 +84,8 @@ export function UserProfile() {
         </PopoverHeader>
         <PopoverBody className="space-y-1 px-2 py-1">
           <Button 
-            variant="ghost" 
-            className="w-full justify-start" 
+            variant="default"
+            className="w-full justify-start hover:bg-[#169183] hover:text-white transition-colors"
             size="sm"
             onClick={handleViewProfile}
           >
@@ -101,7 +101,7 @@ export function UserProfile() {
             onClick={handleSignOut}
           >
             <LogOut className="mr-2 h-4 w-4" />
-            Sign Out
+            Disconnect
           </Button>
         </PopoverFooter>
       </PopoverContent>

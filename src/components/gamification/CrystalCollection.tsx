@@ -2,7 +2,6 @@ import React from 'react'
 import { Card } from '../ui/card'
 import { Badge } from '../ui/badge'
 import { Button } from '../ui/button'
-import { Progress } from '../ui/progress'
 import { Gem, Star, Zap, Crown, Sparkles, ArrowUp, Flame, Diamond } from 'lucide-react'
 import useGamificationStore from '../../stores/useGamificationStore'
 import type { Crystal } from '../../stores/useGamificationStore'
@@ -27,14 +26,14 @@ const CrystalCard: React.FC<CrystalCardProps> = ({ crystal, isActive, onActivate
       case 'wisdom': return <Crown className="w-4 h-4" />
       case 'rare': return <Gem className="w-4 h-4" />
       case 'legendary': return <Diamond className="w-4 h-4" />
-      default: return <Star className="w-4 h-4" />
+      default: return <Star className="w-4 h-4 text-black dark:text-black" />
     }
   }
   
   const getEvolutionIcon = (stage: number) => {
     if (stage >= 4) return <Diamond className="w-3 h-3" />
     if (stage >= 2) return <Flame className="w-3 h-3" />
-    return <Star className="w-3 h-3" />
+    return <Star className="w-3 h-3 text-black dark:text-black" />
   }
 
   const getTypeColor = (type: Crystal['type']) => {
@@ -53,8 +52,8 @@ const CrystalCard: React.FC<CrystalCardProps> = ({ crystal, isActive, onActivate
   return (
     <Card className={`p-4 transition-all cursor-pointer ${
       isActive 
-        ? 'ring-2 ring-blue-500 bg-blue-50 border-blue-200' 
-        : 'hover:shadow-md border-gray-200'
+        ? 'ring-2 ring-blue-500 bg-blue-50' 
+        : 'hover:shadow-md'
     }`}>
       <div className="space-y-3">
         {/* Crystal Header */}
@@ -67,7 +66,7 @@ const CrystalCard: React.FC<CrystalCardProps> = ({ crystal, isActive, onActivate
               {getTypeIcon(crystal.type)}
             </div>
             <div>
-              <h4 className="font-medium text-sm">{crystal.name}</h4>
+              <h4 className="font-medium text-sm text-black dark:text-black">{crystal.name}</h4>
               <div className="flex items-center gap-2">
                 <p className="text-xs text-gray-500">Level {crystal.level}</p>
                 <div className="flex items-center gap-1">
@@ -119,10 +118,15 @@ const CrystalCard: React.FC<CrystalCardProps> = ({ crystal, isActive, onActivate
               {crystal.dataShards}/{crystal.evolutionRequirements.dataShards} Shards
             </span>
           </div>
-          <Progress 
-            value={(crystal.dataShards / crystal.evolutionRequirements.dataShards) * 100} 
-            className="h-2"
-          />
+          <div className="relative h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-200">
+            <div 
+              className="h-full transition-all duration-300"
+              style={{ 
+                width: `${(crystal.dataShards / crystal.evolutionRequirements.dataShards) * 100}%`,
+                backgroundColor: '#169183'
+              }}
+            />
+          </div>
           {crystal.isEvolutionReady && (
             <Button 
               onClick={handleEvolve}
@@ -200,7 +204,7 @@ const CrystalCollection: React.FC = () => {
                 Level {activeCrystalData.level} • {activeCrystalData.type} type
               </p>
               <div className="flex items-center gap-2 mt-1">
-                <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                <Star className="w-3 h-3 text-black dark:text-black fill-current" />
                 <span className="text-xs text-gray-600">
                   {activeCrystalData.totalXp} XP
                 </span>
@@ -213,8 +217,8 @@ const CrystalCollection: React.FC = () => {
       {/* Crystal Collection */}
       <div>
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-semibold text-gray-800 flex items-center gap-2">
-            <Gem className="w-5 h-5 text-purple-600" />
+          <h3 className="font-semibold text-black dark:text-white flex items-center gap-2">
+            <Gem className="w-5 h-5 text-purple-600 dark:text-purple-400" />
             Crystal Collection
           </h3>
           <Badge variant="outline">
@@ -236,31 +240,31 @@ const CrystalCollection: React.FC = () => {
 
       {/* Collection Stats */}
       <Card className="p-4">
-        <h4 className="font-medium text-gray-800 mb-3">Collection Stats</h4>
+        <h4 className="font-medium text-black dark:text-white mb-3">Collection Stats</h4>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div>
             <div className="text-lg font-bold text-blue-600">
               {crystals.filter(c => c.type === 'focus').length}
             </div>
-            <div className="text-xs text-gray-600">Focus</div>
+            <div className="text-xs text-black dark:text-white">Focus</div>
           </div>
           <div>
             <div className="text-lg font-bold text-green-600">
               {crystals.filter(c => c.type === 'energy').length}
             </div>
-            <div className="text-xs text-gray-600">Energy</div>
+            <div className="text-xs text-black dark:text-white">Energy</div>
           </div>
           <div>
             <div className="text-lg font-bold text-purple-600">
               {crystals.filter(c => c.type === 'wisdom').length}
             </div>
-            <div className="text-xs text-gray-600">Wisdom</div>
+            <div className="text-xs text-black dark:text-white">Wisdom</div>
           </div>
           <div>
             <div className="text-lg font-bold text-orange-600">
               {crystals.filter(c => c.type === 'rare').length}
             </div>
-            <div className="text-xs text-gray-600">Rare</div>
+            <div className="text-xs text-black dark:text-white">Rare</div>
           </div>
         </div>
       </Card>

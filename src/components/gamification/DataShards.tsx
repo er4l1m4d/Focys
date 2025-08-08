@@ -114,22 +114,22 @@ export function DataShards() {
         </CardHeader>
         <CardContent className="space-y-4">
           {/* Stats */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-white dark:text-white">
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{dataShards.length}</div>
-              <div className="text-xs text-gray-500">Total Shards</div>
+              <div className="text-2xl font-bold">{dataShards.length}</div>
+              <div className="text-xs">Total Shards</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-blue-600">{totalDataShardValue}</div>
-              <div className="text-xs text-gray-500">Total Value</div>
+              <div className="text-2xl font-bold">{totalDataShardValue}</div>
+              <div className="text-xs">Total Value</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-yellow-600">{rarityStats.legendary || 0}</div>
-              <div className="text-xs text-gray-500">Legendary</div>
+              <div className="text-2xl font-bold">{rarityStats.legendary || 0}</div>
+              <div className="text-xs">Legendary</div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-purple-600">{rarityStats.epic || 0}</div>
-              <div className="text-xs text-gray-500">Epic</div>
+              <div className="text-2xl font-bold">{rarityStats.epic || 0}</div>
+              <div className="text-xs">Epic</div>
             </div>
           </div>
 

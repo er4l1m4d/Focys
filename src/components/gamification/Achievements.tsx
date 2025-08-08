@@ -99,8 +99,8 @@ const Achievements: React.FC = () => {
       <Card className="p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Trophy className="w-5 h-5 text-yellow-600" />
-            <h3 className="font-semibold">Achievements</h3>
+            <Trophy className="w-5 h-5 text-yellow-600 dark:text-yellow-500" />
+            <h3 className="font-semibold text-black dark:text-white">Achievements</h3>
           </div>
           <Badge variant="outline">
             {unlockedList.length}/{unlockedList.length + pendingList.length}
@@ -114,7 +114,7 @@ const Achievements: React.FC = () => {
           </div>
           <div className="text-center">
             <div className="text-lg font-bold text-blue-600">{pendingList.length}</div>
-            <div className="text-gray-600">In Progress</div>
+            <div className="text-black dark:text-white">In Progress</div>
           </div>
           <div className="text-center">
             <div className="text-lg font-bold text-green-600">
@@ -128,8 +128,8 @@ const Achievements: React.FC = () => {
       {/* Unlocked Achievements */}
       {unlockedList.length > 0 && (
         <div>
-          <h4 className="font-medium text-gray-800 mb-3 flex items-center gap-2">
-            <Trophy className="w-4 h-4 text-yellow-600" />
+          <h4 className="font-medium text-black dark:text-white mb-3 flex items-center gap-2">
+            <Trophy className="w-4 h-4 text-yellow-600 dark:text-yellow-500" />
             Unlocked Achievements
           </h4>
           <div className="grid gap-3">
@@ -147,8 +147,8 @@ const Achievements: React.FC = () => {
       {/* Pending Achievements */}
       {pendingList.length > 0 && (
         <div>
-          <h4 className="font-medium text-gray-800 mb-3 flex items-center gap-2">
-            <Lock className="w-4 h-4 text-gray-500" />
+          <h4 className="font-medium text-black dark:text-white mb-3 flex items-center gap-2">
+            <Lock className="w-4 h-4 text-gray-500 dark:text-gray-400" />
             In Progress
           </h4>
           <div className="grid gap-3">
