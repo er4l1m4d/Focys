@@ -13,7 +13,7 @@ import useTimerStore from './stores/useTimerStore'
 import { useEffect } from 'react'
 import { useThemeStore } from './stores/useThemeStore'
 import { useWalletStore } from './stores/useWalletStore'
-import { ThemeToggle } from './components/theme/ThemeToggle'
+import { LandingNavigation } from './components/landing/LandingNavigation'
 
 function AppContent() {
   const isConnected = useWalletStore((state) => state.isConnected);
@@ -79,14 +79,14 @@ function AppContent() {
         
         {/* Show minimal header only when not connected */}
         {!isConnected && (
-          <header className="border-b border-border bg-card/50 backdrop-blur-sm">
+          <header className="border-b border-border/20 bg-transparent">
             <div className="container mx-auto px-4 py-3 flex justify-between items-center">
               <Link to="/" className="flex items-center gap-2">
                 <img src="./focys logo - square .png" alt="Focys logo" className="w-8 h-8 object-contain" />
-                <span className="text-2xl font-outfit font-bold" style={{ color: '#169183' }}>Focys</span>
+                <span className="text-2xl font-outfit font-bold bg-transparent" style={{ color: '#169183' }}>Focys</span>
               </Link>
               <div className="flex items-center gap-4">
-                <ThemeToggle />
+                <LandingNavigation />
                 {isConnected && <UserProfile />}
               </div>
             </div>

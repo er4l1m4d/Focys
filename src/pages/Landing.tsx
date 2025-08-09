@@ -1,5 +1,5 @@
 import { InteractiveHoverButton } from "@/components/ui/interactive-hover-button";
-import dashboardImage from "../../focys dashboard.png";
+import { AppSlideshow } from "@/components/ui/AppSlideshow";
 import { FeaturesSectionWithHoverEffects } from "@/components/ui/feature-section-with-hover-effects";
 import FocysRoadmap from "@/components/ui/focys-roadmap";
 import FocysFaqSection from "@/components/ui/FocysFaqSection";
@@ -46,17 +46,14 @@ export default function Landing() {
               <InteractiveHoverButton text="Connect Wallet" onClick={connectWallet} className="text-sm" />
             </div>
           </div>
-          <div className="flex-1 min-w-0 md:max-w-[50%] flex justify-center md:justify-end px-2">
-            <img
-              src={dashboardImage}
-              alt="Focys Dashboard Screenshot"
-              className="rounded-xl shadow-lg object-cover w-full h-auto max-h-[340px]"
-              style={{maxWidth: '100%', aspectRatio: '16/7', background:'#181B23'}} // fallback bg for transparency
-            />
+          <div className="flex-1 min-w-0 md:max-w-[50%] flex justify-center px-2">
+            <div className="w-full max-w-[750px] transition-all duration-300 hover:scale-[1.02] flex flex-col items-center">
+              <AppSlideshow />
+            </div>
           </div>
         </div>
       </div>
-      <div className="mt-24 md:mt-32 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div id="features" className="mt-24 md:mt-32 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-2 md:mb-4">
           <h2 className="text-3xl md:text-4xl font-bold font-outfit text-[#169183] mb-2">
             Everything You Need to Stay in Flow
@@ -67,10 +64,10 @@ export default function Landing() {
         </div>
         <FeaturesSectionWithHoverEffects />
       </div>
-      <div className="mt-16">
+      <div id="roadmap" className="mt-16">
         <FocysRoadmap />
       </div>
-      <div className="mt-16">
+      <div id="faq" className="mt-16">
         <FocysFaqSection />
       </div>
       <footer className="w-full py-8 border-t border-border/40">

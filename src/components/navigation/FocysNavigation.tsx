@@ -49,14 +49,14 @@ export function FocysNavigation() {
   };
 
   return (
-    <div className="w-full flex items-center justify-between p-4 sticky top-0 z-40 bg-card/80 backdrop-blur-md border-b border-border shadow-sm">
+    <div className="w-full flex items-center justify-between p-4 sticky top-0 z-40 bg-transparent border-b border-border/20">
       <button
         className="flex items-center gap-2 text-xl font-extrabold hover:text-teal-400 transition-colors px-2 py-1 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-teal-400"
         onClick={() => navigate('/dashboard')}
         aria-label="Go to dashboard"
       >
         <img src={focysLogo} alt="Focys logo" className="w-8 h-8 object-contain" />
-        <span className="hidden sm:inline font-outfit font-bold tracking-tight text-[#169183]">Focys</span>
+        <span className="hidden sm:inline font-outfit font-bold tracking-tight text-[#169183] bg-transparent">Focys</span>
       </button>
       
       <div className="flex items-center gap-4">
