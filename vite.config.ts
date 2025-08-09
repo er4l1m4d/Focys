@@ -9,7 +9,10 @@ export default defineConfig({
   base: '/',
   define: {
     global: 'globalThis',
-    'process.env': {},
+    'process.env': {
+      VITE_SUPABASE_URL: JSON.stringify(process.env.VITE_SUPABASE_URL || ''),
+      VITE_SUPABASE_ANON_KEY: JSON.stringify(process.env.VITE_SUPABASE_ANON_KEY || ''),
+    },
   },
   resolve: {
     alias: {
@@ -43,10 +46,17 @@ export default defineConfig({
       ],
     },
   },
+  // Configure environment variables for client-side use
+  envDir: './',
+  envPrefix: 'VITE_',
+  
+  // Development server configuration
   server: {
     port: 5173,
     strictPort: true,
     open: true,
+    // Enable CORS for development
+    cors: true,
   },
   preview: {
     port: 5173,

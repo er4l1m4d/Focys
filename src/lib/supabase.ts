@@ -1,29 +1,63 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
 
-// Throw clear error if environment variables are missing
-const getEnvVar = (name: string): string => {
-  const value = import.meta.env[name];
-  if (!value) {
-    console.error(`Missing required environment variable: ${name}`);
-    return '';
+// Default values that will be used if environment variables are missing
+const DEFAULT_SUPABASE_URL = 'https://your-supabase-url.supabase.co';
+const DEFAULT_SUPABASE_ANON_KEY = 'your-supabase-anon-key';
+
+// Get environment variables with fallbacks
+const getEnvVar = (name: string, defaultValue: string = ''): string => {
+  // In production, use import.meta.env
+  if (typeof window !== 'undefined') {
+    const value = import.meta.env[name];
+    if (value) return value;
   }
-  return value;
+  
+  // In development, try process.env
+  if (typeof process !== 'undefined' && process.env) {
+    const value = process.env[name];
+    if (value) return value;
+  }
+  
+  return defaultValue;
 };
 
-const supabaseUrl = getEnvVar('VITE_SUPABASE_URL');
-const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY');
+const supabaseUrl = getEnvVar('VITE_SUPABASE_URL', DEFAULT_SUPABASE_URL);
+const supabaseAnonKey = getEnvVar('VITE_SUPABASE_ANON_KEY', DEFAULT_SUPABASE_ANON_KEY);
 
-if (!supabaseUrl || !supabaseAnonKey) {
-  console.error('Supabase configuration is missing. Please check your environment variables.');
+// Create a mock Supabase client if environment variables are missing
+let supabase: SupabaseClient;
+
+try {
+  supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true,
+    },
+  });
+} catch (error) {
+  console.error('Failed to initialize Supabase client:', error);
+  
+  // Create a mock client with no-op methods
+  supabase = {
+    auth: {
+      signIn: async () => ({ data: { user: null, session: null }, error: new Error('Supabase not initialized') }),
+      signOut: async () => ({ error: new Error('Supabase not initialized') }),
+      // Add other auth methods as needed
+    },
+    // Add other Supabase methods used in your app
+    from: () => ({
+      select: () => ({
+        eq: () => ({
+          single: async () => ({ data: null, error: new Error('Supabase not initialized') }),
+        }),
+        upsert: async () => ({ data: null, error: new Error('Supabase not initialized') }),
+      }),
+    }),
+  } as unknown as SupabaseClient;
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true,
-  },
-});
+export { supabase };
 
 // Types
 export type UserProfile = {

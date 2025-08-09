@@ -4,11 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "tsx scripts/check-env.ts && vite",
+    "build": "tsx scripts/check-env.ts && tsc && vite build",
     "lint": "eslint . --max-warnings 0",
     "preview": "vite preview",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "check-env": "tsx scripts/check-env.ts"
   },
   "dependencies": {
     "@irys/sdk": "^0.2.11",
@@ -45,6 +46,8 @@
     "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
     "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
     "@rollup/plugin-inject": "^5.0.5",
+    "tsx": "^4.7.0",
+    "dotenv": "^16.3.1",
     "@types/node": "^20.10.5",
     "@types/react": "^18.2.42",
     "@types/react-dom": "^18.2.17",
