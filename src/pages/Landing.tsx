@@ -36,8 +36,8 @@ export default function Landing() {
   }
 
   return (
-    <div className="w-full flex flex-col items-center">
-      <div className="w-full max-w-4xl mx-auto">
+    <div className="w-full flex flex-col items-center px-4 sm:px-6">
+      <div className="w-full max-w-4xl mx-auto px-0 sm:px-4">
         <div className="flex flex-col md:flex-row items-center justify-between gap-6 md:gap-10 mt-8 md:mt-12 w-full">
           <div className="flex-1 min-w-0 md:max-w-[50%] px-2">
             <h1 className="text-4xl md:text-5xl font-bold heading-outfit text-[#169183] mb-4 text-center md:text-left">Gamify Your Focus.</h1>
@@ -53,7 +53,7 @@ export default function Landing() {
           </div>
         </div>
       </div>
-      <div id="features" className="mt-24 md:mt-32 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div id="features" className="mt-24 md:mt-32 w-full max-w-7xl mx-auto px-0 sm:px-4 lg:px-8">
         <div className="text-center mb-2 md:mb-4">
           <h2 className="text-3xl md:text-4xl font-bold font-outfit text-[#169183] mb-2">
             Everything You Need to Stay in Flow
@@ -70,8 +70,8 @@ export default function Landing() {
       <div id="faq" className="mt-16">
         <FocysFaqSection />
       </div>
-      <footer className="w-full py-8 border-t border-border/40">
-        <div className="container mx-auto px-4">
+      <footer className="w-full py-8 border-t border-border/40 px-4 sm:px-6">
+        <div className="max-w-7xl mx-auto">
           <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
             <div className="text-sm text-muted-foreground">
               © 2025 Focys — Made with <span className="text-red-500">♥</span> by Jigz

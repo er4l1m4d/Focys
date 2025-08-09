@@ -79,8 +79,8 @@ function AppContent() {
         
         {/* Show minimal header only when not connected */}
         {!isConnected && (
-          <header className="border-b border-border/20 bg-transparent">
-            <div className="container mx-auto px-4 py-3 flex justify-between items-center">
+          <header className="border-b border-border/20 bg-transparent w-full">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center w-full">
               <Link to="/" className="flex items-center gap-2">
                 <img src="./focys logo - square .png" alt="Focys logo" className="w-8 h-8 object-contain" />
                 <span className="text-2xl font-outfit font-bold bg-transparent" style={{ color: '#169183' }}>Focys</span>
@@ -94,7 +94,7 @@ function AppContent() {
         )}
 
         {/* Main content - Mobile-optimized spacing */}
-        <main className="pb-4 sm:pb-6">
+        <main className="pb-4 sm:pb-6 px-4 sm:px-6 w-full">
           <Routes>
             <Route path="/" element={<Landing />} />
             <Route path="/dashboard" element={isConnected ? <Dashboard /> : <Landing />} />
