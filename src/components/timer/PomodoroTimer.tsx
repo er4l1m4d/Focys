@@ -160,10 +160,10 @@ export function PomodoroTimer() {
       {isFullscreen && (
         <button
           onClick={handleExitFocus}
-          className="absolute top-2 right-2 p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+          className="absolute top-2 right-2 p-2 rounded-full hover:bg-[#169183]/20 dark:hover:bg-[#169183]/30 transition-colors"
           aria-label="Exit focus mode"
         >
-          <X className="w-5 h-5 text-foreground" />
+          <X className="w-5 h-5 text-[#169183] dark:text-[#169183]" />
         </button>
       )}
 
@@ -294,7 +294,7 @@ export function PomodoroTimer() {
               <Button
                 onClick={cancelExitFocus}
                 variant="outline"
-                className="flex-1"
+                className="flex-1 border-[#169183] text-[#169183] hover:bg-[#169183]/10 dark:border-[#169183] dark:text-[#169183] dark:hover:bg-[#169183]/20"
               >
                 Stay Focused
               </Button>
