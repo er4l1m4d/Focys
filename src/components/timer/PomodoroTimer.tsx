@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Progress } from '@/components/ui/progress'
 import useTimerStore from '@/stores/useTimerStore'
 import { IconTargetArrow } from "@tabler/icons-react"
-import { ArrowRight, Clock, X } from 'lucide-react'
+import { X } from 'lucide-react'
 import { IconYoga } from "@tabler/icons-react"
 import useFullscreen from '@/hooks/useFullscreen'
 import { cn } from '@/lib/utils'
@@ -74,11 +74,9 @@ export function PomodoroTimer() {
   const {
     isFullscreen,
     isSupported,
-    isMobile,
     enter,
     exit,
     error: fullscreenError,
-    isLoading: isFullscreenLoading
   } = useFullscreen()
 
   // Handle fullscreen state changes
