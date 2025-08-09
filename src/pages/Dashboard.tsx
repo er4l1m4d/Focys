@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import LevelProgress from "@/components/gamification/LevelProgress"
 import useGamificationStore from "@/stores/useGamificationStore"
-import useUserStore from "@/stores/useUserStore"
 import { Trophy, Target, Flame } from "lucide-react"
 import { useNavigate } from "react-router-dom"
+import { useWalletStore } from '@/stores/useWalletStore'
 
 export function Dashboard() {
   const {
@@ -13,8 +13,8 @@ export function Dashboard() {
     totalFocusMinutes,
     getUnlockedAchievements
   } = useGamificationStore()
-
-  const { username } = useUserStore()
+  
+  const { currentProfile } = useWalletStore()
   const recentAchievements = getUnlockedAchievements().slice(0, 3)
   const navigate = useNavigate()
 
@@ -23,7 +23,7 @@ export function Dashboard() {
       {/* Welcome Section - Enhanced mobile layout */}
       <div className="text-center py-6">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-3 text-[#169183]">
-          Welcome to Focys{username ? `, ${username}` : ''}
+          Welcome to Focys{currentProfile?.username ? `, ${currentProfile.username}` : ''}
         </h1>
         <p className="text-sm sm:text-base text-foreground/80 mb-6 max-w-2xl mx-auto">
           Track your focus sessions, earn XP, and build your focus streak. Your journey to better productivity starts here.
