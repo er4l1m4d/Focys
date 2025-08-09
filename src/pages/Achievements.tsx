@@ -65,7 +65,7 @@ export function Achievements() {
   return (
     <div className="container mx-auto p-4 space-y-6">
       <div className="text-center space-y-2">
-        <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-bold text-[#169183]">
           Achievements
         </h1>
         <p className="text-muted-foreground">

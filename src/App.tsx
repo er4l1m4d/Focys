@@ -82,7 +82,7 @@ function AppContent() {
           <header className="border-b border-border/20 bg-transparent w-full">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center w-full">
               <Link to="/" className="flex items-center gap-2">
-                <img src="./focys logo - square .png" alt="Focys logo" className="w-8 h-8 object-contain" />
+                <img src="./focys logo - square .png" alt="Focys logo" className="w-8 h-8 object-contain rounded-lg" />
                 <span className="text-2xl font-outfit font-bold bg-transparent" style={{ color: '#169183' }}>Focys</span>
               </Link>
               <div className="flex items-center gap-4">

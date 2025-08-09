@@ -55,7 +55,7 @@ export function FocysNavigation() {
         onClick={() => navigate('/dashboard')}
         aria-label="Go to dashboard"
       >
-        <img src={focysLogo} alt="Focys logo" className="w-8 h-8 object-contain" />
+        <img src={focysLogo} alt="Focys logo" className="w-8 h-8 object-contain rounded-lg" />
         <span className="hidden sm:inline font-outfit font-bold tracking-tight text-[#169183] bg-transparent">Focys</span>
       </button>
       
