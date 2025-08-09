@@ -1,69 +1,103 @@
-# React + TypeScript + Vite
+# Focys - Gamified Focus Tracker 
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![Focys Logo](/public/focys-favicon.png)
 
-Currently, two official plugins are available:
+Focys is a cutting-edge, gamified focus tracker that combines the Pomodoro technique with Web3 technology to help you stay productive while earning rewards. Built with a modern tech stack, Focys makes focus sessions engaging and rewarding.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
 
-## Expanding the ESLint configuration
+- **Pomodoro Timer**
+  - Customizable focus/break intervals
+  - Session tracking and history
+  - Sound notifications
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- **Gamification**
+  - Earn XP for focused sessions
+  - Level up and unlock achievements
+  - Collect and evolve digital crystals
+  - Compete with friends (coming soon)
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- **Web3 Integration**
+  - Secure wallet connection (MetaMask/WalletConnect)
+  - Permanent session logging on Irys
+  - Future NFT integration for milestones
 
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
+- **User Experience**
+  - Beautiful, responsive design
+  - Dark/Light mode
+  - Offline-first PWA support
+  - Cross-device synchronization
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## Tech Stack
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- **Frontend**
+  - React 18 + TypeScript
+  - Vite (Build Tool)
+  - Tailwind CSS + shadcn/ui
+  - Framer Motion (Animations)
+  - Zustand (State Management)
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Web3**
+  - ethers.js
+  - Irys (Permanent Data Storage)
+  - WalletConnect v2
 
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- **Testing & Quality**
+  - ESLint + Prettier
+  - TypeScript strict mode
+  - Responsive design testing
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+ & npm
+- MetaMask or compatible Web3 wallet
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/focys.git
+   cd focys
+   ```
+
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+
+3. Set up environment variables:
+   ```bash
+   cp .env.example .env
+   # Update the .env file with your configuration
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+5. Open [http://localhost:5173](http://localhost:5173) in your browser.
+
+## Progressive Web App
+
+Focys works offline and can be installed as a PWA on your device for quick access.
+
+## Deployment
+
+Deployed on Vercel: [focys.vercel.app](https://focys.vercel.app)
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Built with by Jigz
+- Special thanks to all contributors and beta testers
+- Inspired by the Pomodoro Technique and gamification principles
+
+---
+
+**Tip**: Connect your wallet to start earning rewards and track your focus journey on the blockchain!
