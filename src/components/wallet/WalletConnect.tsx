@@ -146,7 +146,7 @@ export function WalletConnect() {
     
     return (
       <div className="w-full">
-        <div className="border rounded-lg overflow-hidden">
+        <div className="border rounded-lg overflow-hidden dark:bg-[#252425]">
           <div className="p-4 border-b">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -162,18 +162,18 @@ export function WalletConnect() {
                 </div>
               </div>
               <Button 
-                variant="ghost" 
+                variant="default" 
                 size="icon" 
                 onClick={disconnect}
                 disabled={isConnecting}
-                className="h-8 w-8"
+                className="h-8 w-8 bg-primary hover:bg-primary/90"
               >
                 <LogOut className="h-4 w-4" />
               </Button>
             </div>
           </div>
           <div className="p-4">
-            <div className="grid gap-2 mb-4">
+            <div className="grid gap-2">
               <div className="flex items-center justify-between text-sm">
                 <span className="text-muted-foreground">Wallet</span>
                 <div className="flex items-center">
@@ -186,14 +186,6 @@ export function WalletConnect() {
                 <span>{formatChainName(chainId)}</span>
               </div>
             </div>
-            <Button 
-              variant="outline" 
-              className="w-full"
-              onClick={disconnect}
-              disabled={isConnecting}
-            >
-              {isConnecting ? 'Disconnecting...' : 'Disconnect Wallet'}
-            </Button>
           </div>
         </div>
       </div>
